@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
-
-const socket = io("http://localhost:5000", {
+// This replaces the hardcoded localhost with your Render environment variable
+const socket = io(process.env.API_URL || "http://localhost:5000/api", {
     transports: ["websocket", "polling"],
   });
 
