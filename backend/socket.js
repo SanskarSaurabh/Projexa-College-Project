@@ -4,7 +4,15 @@ import MessageModel from "./models/message.models.js";
 export const initSocket = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: "*",
+      // List all your Vercel deployment URLs here
+      origin: [
+        "https://projexa-college-project-ojmv.vercel.app",
+        "https://projexa-college-project-ojmv-git-main-sanskarsaurabhs-projects.vercel.app",
+        "https://projexa-college-project-ojmv-cgvgmf9vj-sanskarsaurabhs-projects.vercel.app",
+        "http://localhost:3000" // For local development
+      ],
+      methods: ["GET", "POST"],
+      credentials: true
     },
   });
 
@@ -13,20 +21,25 @@ export const initSocket = (server) => {
 
     socket.on("join", (userId) => {
       socket.join(userId);
+      console.log(`User ${userId} joined room`);
     });
 
     socket.on("sendMessage", async (data) => {
-      const { sender, receiver, text } = data;
+      try {
+        const { sender, receiver, text } = data;
 
-      // save message in DB
-      const message = await MessageModel.create({
-        sender,
-        receiver,
-        text,
-      });
+        // save message in DB
+        const message = await MessageModel.create({
+          sender,
+          receiver,
+          text,
+        });
 
-      // send to receiver in real-time
-      io.to(receiver).emit("receiveMessage", message);
+        // send to receiver in real-time
+        io.to(receiver).emit("receiveMessage", message);
+      } catch (error) {
+        console.error("Socket Message Error:", error);
+      }
     });
 
     socket.on("disconnect", () => {

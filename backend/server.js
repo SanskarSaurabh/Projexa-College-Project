@@ -26,23 +26,30 @@ dotenv.config()
 
 connectDB()
 
+
 const allowedOrigins = [
-  'http://localhost:3000', // Your local CRA dev server
-  'https://your-frontend-name.onrender.com' // Your live frontend URL
+  'https://projexa-college-project-ojmv.vercel.app',
+  'https://projexa-college-project-ojmv-git-main-sanskarsaurabhs-projects.vercel.app',
+  'https://projexa-college-project-ojmv-cgvgmf9vj-sanskarsaurabhs-projects.vercel.app',
+  'http://localhost:3000' // Keep this for local testing
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    return callback(null, true);
   },
-  credentials: true // Important if you decide to use Cookies/Sessions later
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(express.json());
 
   
