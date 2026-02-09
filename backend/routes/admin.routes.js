@@ -4,7 +4,7 @@ import {
   approveUser,
   rejectUser,
 } from "../controller/AdminController.js";
-import protect from "../middleware/authMiddleware.js";
+import protect from "../Middleware/authMiddleware.js";
 import  isAdmin  from "../Middleware/RoleMiddleware.js";
 
 const router = express.Router();
