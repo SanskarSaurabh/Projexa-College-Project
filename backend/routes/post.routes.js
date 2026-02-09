@@ -7,7 +7,7 @@ import {
   rejectPost,
 } from "../controller/PostController.js";
 
-import protect from "../middleware/authMiddleware.js";
+import protect from "../Middleware/AuthMiddleware.js";
 import isAdmin from "../Middleware/RoleMiddleware.js";
 
 
