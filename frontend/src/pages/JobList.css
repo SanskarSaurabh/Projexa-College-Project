@@ -1,0 +1,94 @@
+:root {
+    --bg-jobs: #08080a;
+    --card-bg: #1c1b29;
+    --indigo-glow: #7c6cf0;
+    --text-silver: #94a3b8;
+  }
+  
+  .jobs-wrapper {
+    min-height: 100vh;
+    background-color: var(--bg-jobs);
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .job-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 30px;
+    height: 100%;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .job-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--indigo-glow);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  }
+  
+  .company-logo-placeholder {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--indigo-glow), #a78bfa);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 900;
+    font-size: 1.5rem;
+  }
+  
+  .dept-tag {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-silver);
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* 📊 ELIGIBILITY GRID */
+  .eligibility-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 12px;
+  }
+  
+  .eligibility-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .eligibility-item .label {
+    font-size: 0.7rem;
+    color: var(--text-silver);
+    text-transform: uppercase;
+  }
+  
+  .eligibility-item .value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  
+  /* 🚀 BUTTON */
+  .btn-apply-now {
+    background: transparent;
+    border: 1px solid var(--indigo-glow);
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  
+  .btn-apply-now:hover {
+    background: var(--indigo-glow);
+    box-shadow: 0 0 15px var(--indigo-glow);
+  }

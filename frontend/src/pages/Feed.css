@@ -1,0 +1,145 @@
+:root {
+    --bg-deep: #08080a;
+    --card-dark: #1c1b29;
+    --indigo-glow: #6358dc;
+    --text-silver: #94a3b8;
+    --text-light: #e2e8f0;
+  }
+  
+  .feed-wrapper {
+    min-height: 100vh;
+    background-color: var(--bg-deep);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  /* 💠 POST CARDS */
+  .post-card {
+    background: var(--card-dark);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+  }
+  
+  .avatar-sm {
+    width: 42px;
+    height: 42px;
+    background: var(--indigo-glow);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #fff;
+  }
+  
+  .text-silver-light {
+    color: var(--text-light);
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+  
+  /* 🏷️ ROLE BADGES */
+  .badge-role {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  
+  .badge-role.admin { color: #f87171; background: rgba(248, 113, 113, 0.1); }
+  .badge-role.placement { color: #34d399; background: rgba(52, 211, 153, 0.1); }
+  .badge-role.student { color: #60a5fa; background: rgba(96, 165, 250, 0.1); }
+  
+  /* 🖱️ ACTIONS */
+  .post-action-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-silver);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0;
+    transition: 0.2s;
+  }
+  
+  .post-action-btn:hover {
+    color: var(--indigo-glow);
+  }
+  
+  /* 🖼️ SIDEBAR & EXTRAS */
+  .sidebar-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    position: sticky;
+    top: 100px;
+  }
+  
+  .empty-feed-card {
+    background: var(--card-dark);
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+  }
+
+  /* Create Post Card */
+.create-post-card {
+    background: var(--card-dark);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* 🎯 Placeholder & Textarea Visibility */
+  .post-input {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    border-radius: 12px;
+    padding: 15px;
+    resize: none;
+    font-size: 1rem;
+  }
+  
+  .post-input::placeholder {
+    color: #94a3b8 !important; /* Brighter silver for visibility */
+    font-size: 0.95rem;
+    opacity: 1;
+  }
+  
+  .post-input:focus {
+    border-color: var(--indigo-glow) !important;
+    box-shadow: 0 0 12px rgba(124, 108, 240, 0.2) !important;
+    outline: none;
+  }
+  
+  /* Buttons and Extras */
+  .btn-icon-option {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.2rem;
+    transition: 0.2s;
+  }
+  
+  .btn-icon-option:hover {
+    color: var(--indigo-glow);
+  }
+  
+  .alert-custom-mini {
+    font-size: 0.85rem;
+    padding: 8px 15px;
+    border-radius: 8px;
+  }
+  
+  .alert-custom-mini.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+  }
+  
+  .alert-custom-mini.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }

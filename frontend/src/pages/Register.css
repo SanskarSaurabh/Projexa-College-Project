@@ -1,0 +1,169 @@
+/* Register.css - Campus Connect Theme */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+:root {
+  --bg-dark-obsidian: #08080a;
+  --pane-slate-purple: #2d2b3d; /* Exact match to your reference */
+  --electric-indigo: #7c6cf0;
+  --text-pure-white: #ffffff;
+  --text-muted-silver: #b0b0c8;
+  --success-emerald: #75b798;
+  --error-crimson: #ff5252;
+}
+
+.login-viewport {
+  min-height: 100vh;
+  background-color: var(--bg-dark-obsidian);
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.main-login-container {
+  max-width: 1150px;
+  height: 800px; /* Slightly taller to accommodate extra Register fields */
+  background-color: var(--pane-slate-purple);
+  border-radius: 30px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
+/* 🌌 LEFT VISUAL SIDE */
+.visual-pane {
+    background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    border-radius: 30px 0 0 30px;
+  }
+
+.overlay-content {
+  background: linear-gradient(
+    rgba(45, 43, 61, 0.45), 
+    rgba(45, 43, 61, 0.95)
+  );
+  border-radius: 30px 0 0 30px;
+}
+
+.brand-logo {
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: -1px;
+  color: var(--text-pure-white);
+}
+
+.text-indigo-glow {
+  color: var(--electric-indigo);
+  text-shadow: 0 0 15px rgba(124, 108, 240, 0.5);
+}
+
+/* 📝 RIGHT FORM SIDE */
+.form-pane {
+  background-color: var(--pane-slate-purple);
+  border-radius: 0 30px 30px 0;
+}
+
+.login-input {
+  background-color: rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: var(--text-pure-white) !important;
+  padding: 14px 18px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.login-input::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-weight: 400;
+}
+
+.login-input:focus {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  border-color: var(--electric-indigo) !important;
+  box-shadow: 0 0 0 4px rgba(124, 108, 240, 0.15) !important;
+  outline: none;
+}
+
+/* 🚀 ACTION BUTTON */
+.btn-submit-indigo {
+  background-color: var(--electric-indigo);
+  color: white !important;
+  border: none;
+  font-weight: 700;
+  padding: 14px;
+  border-radius: 12px;
+  transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-submit-indigo:hover {
+  background-color: #6352e0;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 🔗 LINKS & TEXT */
+.back-link {
+  color: var(--text-muted-silver);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.back-link:hover {
+  color: var(--text-pure-white);
+}
+
+.text-silver { color: var(--text-muted-silver) !important; }
+
+/* ⚠️ ALERTS */
+.alert-custom {
+  background: rgba(255, 82, 82, 0.1);
+  border: 1px solid var(--error-crimson);
+  color: var(--error-crimson);
+  border-radius: 10px;
+}
+
+.alert-success {
+  background: rgba(117, 183, 152, 0.1) !important;
+  border: 1px solid var(--success-emerald) !important;
+  color: var(--success-emerald) !important;
+}
+
+/* 🔘 SOCIAL BUTTONS */
+.btn-outline-social {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-pure-white);
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  transition: 0.3s;
+}
+
+.btn-outline-social:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.visual-pane {
+    background-color: #1a1926; /* Dark fallback color */
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .overlay-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* This creates a dark tint over the image to make the white text pop */
+    background: linear-gradient(
+      to bottom,
+      rgba(45, 43, 61, 0.3) 0%,
+      rgba(45, 43, 61, 0.9) 100%
+    );
+    padding: 3rem;
+    display: flex;
+    flex-column: column;
+    justify-content: space-between;
+    z-index: 2;
+  }

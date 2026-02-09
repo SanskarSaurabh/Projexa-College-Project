@@ -1,0 +1,109 @@
+:root {
+    --chat-bg: #0a0a0c;
+    --slate-card: #1c1b29;
+    --indigo-glow: #6358dc;
+    --text-silver: #94a3b8;
+    --glass-border: rgba(255, 255, 255, 0.05);
+  }
+  
+  .chat-wrapper {
+    height: 100vh;
+    background-color: var(--chat-bg);
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+  }
+  
+  .chat-main-container {
+    height: calc(100vh - 80px);
+  }
+  
+  .chat-glass-card {
+    background: var(--slate-card);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  /* Sidebar */
+  .chat-sidebar {
+    background: rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-list {
+    max-height: 100%;
+  }
+  
+  .user-item {
+    cursor: pointer;
+    transition: 0.2s;
+    border-left: 3px solid transparent;
+  }
+  
+  .user-item:hover { background: rgba(255, 255, 255, 0.03); }
+  
+  .active-user {
+    background: rgba(99, 88, 220, 0.1);
+    border-left: 3px solid var(--indigo-glow);
+  }
+  
+  .avatar-chat {
+    width: 40px;
+    height: 40px;
+    background: var(--indigo-glow);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #fff;
+  }
+  
+  .avatar-chat.sm { width: 30px; height: 30px; font-size: 0.8rem; }
+  
+  /* Messages Bubble */
+  .messages-area {
+    background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+  
+  .message-bubble-wrapper { margin-bottom: 12px; }
+  
+  .message-bubble {
+    max-width: 70%;
+    padding: 10px 16px;
+    border-radius: 18px;
+    font-size: 0.95rem;
+    color: #fff;
+  }
+  
+  .bg-indigo-msg {
+    background-color: var(--indigo-glow);
+    border-bottom-right-radius: 4px;
+  }
+  
+  .bg-slate-msg {
+    background-color: #2d2b3d;
+    border-bottom-left-radius: 4px;
+  }
+  
+  /* Input Area */
+  .chat-input-field {
+    background: rgba(0,0,0,0.2) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: white !important;
+    border-radius: 12px 0 0 12px !important;
+    padding: 12px;
+  }
+  
+  .btn-indigo-send {
+    background: var(--indigo-glow);
+    border: none;
+    color: white;
+    width: 50px;
+    border-radius: 0 12px 12px 0;
+  }
+  
+  .text-silver-muted { color: var(--text-silver); }

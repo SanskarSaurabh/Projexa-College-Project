@@ -1,0 +1,12 @@
+# This ignores node_modules in the root, backend, and frontend folders
+node_modules/
+
+# This ignores .env files anywhere in the project
+*.env
+.env
+backend/.env
+frontend/.env
+
+# Ignore build files
+frontend/build/
+frontend/dist/

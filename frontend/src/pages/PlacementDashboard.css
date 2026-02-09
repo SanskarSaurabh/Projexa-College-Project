@@ -1,0 +1,204 @@
+:root {
+    --bg-dark: #08080a;
+    --card-glass: #16161d;
+    --indigo-glow: #7c6cf0;
+    --success-green: #10b981;
+    --warning-yellow: #fbbf24;
+  }
+  
+  .placement-wrapper {
+    min-height: 100vh;
+    background-color: var(--bg-dark);
+    font-family: 'Inter', sans-serif;
+    color: #fff;
+  }
+  
+  .glass-card {
+    background: var(--card-glass);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* 🎯 TABLE VISIBILITY FIX */
+  .high-visibility-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px; /* Space between rows */
+  }
+  
+  .high-visibility-table thead th {
+    color: var(--indigo-glow) !important;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 10px 15px;
+    border: none;
+  }
+  
+  .high-visibility-table tbody tr {
+    background: rgba(255, 255, 255, 0.04);
+    transition: transform 0.2s ease;
+  }
+  
+  .high-visibility-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(1.01);
+  }
+  
+  .high-visibility-table td {
+    padding: 15px !important;
+    vertical-align: middle;
+    border: none;
+    font-size: 0.95rem;
+  }
+  
+  /* 🎨 DATA INDICATORS */
+  .marks-pill {
+    background: rgba(124, 108, 240, 0.2);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    border: 1px solid var(--indigo-glow);
+  }
+  
+  .status-badge {
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  
+  .status-badge.safe {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success-green);
+    border: 1px solid var(--success-green);
+  }
+  
+  .status-badge.warn {
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--warning-yellow);
+    border: 1px solid var(--warning-yellow);
+  }
+  
+  /* FORM PLACEHOLDERS FIX */
+  .placement-form .form-control {
+    background: #000 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    height: 45px;
+  }
+  
+  .placement-form .form-control::placeholder {
+    color: #64748b !important; /* Visible slate grey */
+    opacity: 1;
+  }
+  
+  .no-data-alert {
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px dashed #ef4444;
+    color: #ef4444;
+    padding: 20px;
+    text-align: center;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  /* 🎯 HOVER CONTRAST FIX */
+.high-visibility-table tbody tr:hover {
+    background-color: #ffffff !important; /* The white background you mentioned */
+    cursor: pointer;
+  }
+  
+  /* When the row is hovered, change all text inside it to dark */
+  .high-visibility-table tbody tr:hover td,
+  .high-visibility-table tbody tr:hover td.text-white,
+  .high-visibility-table tbody tr:hover .candidate-name {
+    color: #08080a !important; /* Dark background color for text */
+  }
+  
+  /* Ensure the Marks Pill stays readable on hover */
+  .high-visibility-table tbody tr:hover .marks-pill {
+    background: var(--indigo-glow);
+    color: #ffffff; /* Keep marks white for pop against the dark text */
+    border-color: #08080a;
+  }
+  
+  /* Update the Backlog Badge text to black on hover if needed */
+  .high-visibility-table tbody tr:hover .status-badge {
+    border-width: 2px;
+  }
+  /* 🎯 FIXING THE "ELIGIBLE STUDENTS" BUTTON TEXT */
+.btn-outline-indigo {
+    border: 1px solid var(--indigo-glow) !important;
+    color: #ffffff !important; /* Force text to be pure white */
+    background: rgba(124, 108, 240, 0.1); /* Subtle fill so it's not empty */
+    font-weight: 700 !important; /* Make font thicker */
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-outline-indigo:hover {
+    background: var(--indigo-glow) !important; /* Solid color on hover */
+    color: #000000 !important; /* Black text on purple background for max contrast */
+    box-shadow: 0 0 15px rgba(124, 108, 240, 0.5);
+  }
+  
+  /* 🔍 FIXING THE JOB ITEM TEXT */
+  .job-item .text-white-50 {
+    color: #cbd5e1 !important; /* Making the role text brighter than 50% opacity */
+    font-weight: 500;
+  }
+  
+  .job-item h6 {
+    font-size: 1.1rem !important;
+    letter-spacing: 0.5px;
+  }
+  /* 🚀 THE BIG "PUBLISH OPPORTUNITY" BUTTON */
+.btn-indigo {
+    background: var(--indigo-glow) !important;
+    color: #ffffff !important;
+    font-weight: 800 !important; /* Extra thick font */
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 14px !important;
+    border: none;
+    box-shadow: 0 4px 15px rgba(124, 108, 240, 0.4);
+    transition: all 0.3s ease;
+  }
+  
+  .btn-indigo:hover {
+    background: #6355d8 !important; /* Slightly darker indigo */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(124, 108, 240, 0.6);
+  }
+  
+  /* 🎯 THE "CHECK ELIGIBILITY" BUTTONS */
+  .btn-outline-indigo {
+    border: 2px solid var(--indigo-glow) !important; /* Thicker border */
+    color: #ffffff !important; /* Pure white text */
+    font-weight: 700 !important;
+    background: rgba(124, 108, 240, 0.15) !important; /* Slight fill for visibility */
+    text-transform: uppercase;
+    font-size: 0.75rem !important;
+  }
+  
+  .btn-outline-indigo:hover {
+    background: #ffffff !important; 
+    color: #000000 !important; /* Flip to black text on white hover */
+    border-color: #ffffff !important;
+  }
+  
+  /* 📝 FORM INPUT TEXT */
+  .placement-form .form-control {
+    font-weight: 600 !important;
+    color: #ffffff !important;
+  }
+  
+  /* Brighten the placeholders */
+  .placement-form .form-control::placeholder {
+    color: #a1a1aa !important; /* Light grey/silver */
+    opacity: 1;
+  }

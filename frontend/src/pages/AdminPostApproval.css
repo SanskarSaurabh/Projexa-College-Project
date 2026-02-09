@@ -1,0 +1,190 @@
+:root {
+    --bg-admin: #050506;
+    --card-slate: #1c1b29;
+    --indigo-glow: #6358dc;
+    --emerald-btn: #10b981;
+    --rose-btn: #ef4444;
+    --silver-text: #94a3b8;
+  }
+  
+  .admin-wrapper {
+    min-height: 100vh;
+    background-color: var(--bg-admin);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  /* 💊 NAVIGATION PILLS */
+  .admin-nav-pills {
+    display: flex;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px;
+    border-radius: 12px;
+  }
+  
+  .nav-pill {
+    padding: 8px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--silver-text);
+    font-size: 0.9rem;
+    transition: 0.3s;
+  }
+  
+  .nav-pill.active, .nav-pill:hover {
+    background: var(--indigo-glow);
+    color: #fff;
+  }
+  
+  /* 🏢 ADMIN CARD & TABLE */
+  .admin-card {
+    background: var(--card-slate);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+  
+  .custom-admin-table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+  
+  .custom-admin-table thead th {
+    border: none;
+    color: var(--silver-text);
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .custom-admin-table tbody tr {
+    background: rgba(255, 255, 255, 0.02);
+    transition: 0.2s;
+  }
+  
+  .custom-admin-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .custom-admin-table td {
+    padding: 16px;
+    border: none;
+  }
+  
+  /* 🏷️ ROLE TAGS */
+  .role-tag {
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  
+  .role-tag.admin { background: rgba(99, 88, 220, 0.2); color: var(--indigo-glow); }
+  .role-tag.placement { background: rgba(16, 185, 129, 0.2); color: var(--emerald-btn); }
+  .role-tag.student { background: rgba(148, 163, 184, 0.2); color: #fff; }
+  
+  /* ✅ ACTIONS */
+  .btn-approve, .btn-reject {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+  }
+  
+  .btn-approve { background: rgba(16, 185, 129, 0.1); color: var(--emerald-btn); }
+  .btn-approve:hover { background: var(--emerald-btn); color: #fff; }
+  
+  .btn-reject { background: rgba(239, 68, 68, 0.1); color: var(--rose-btn); }
+  .btn-reject:hover { background: var(--rose-btn); color: #fff; }
+  
+  .badge-system {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--indigo-glow);
+    display: block;
+  }
+
+
+  /* Post Approval Specific Styles */
+.post-approval-card {
+    background: var(--card-slate);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 24px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+  }
+  
+  .post-approval-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--indigo-glow);
+  }
+  
+  .author-avatar-sm {
+    width: 32px;
+    height: 32px;
+    background: var(--indigo-glow);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: white;
+  }
+  
+  .post-body {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
+  .text-silver-muted {
+    color: #b0b0c8;
+  }
+  
+  .smaller {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  /* Wide Action Buttons */
+  .btn-approve-lg {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  
+  .btn-approve-lg:hover {
+    background: #10b981;
+    color: white;
+  }
+  
+  .btn-reject-lg {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 10px 15px;
+    border-radius: 12px;
+    transition: 0.3s;
+  }
+  
+  .btn-reject-lg:hover {
+    background: #ef4444;
+    color: white;
+  }
