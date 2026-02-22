@@ -21,38 +21,48 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Fetch all users on mount
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const res = await getChatUsers();
         setUsers(res.data.users);
-      } catch (err) { console.error(err); }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
     };
     fetchUsers();
   }, []);
 
-  // Join room whenever user logs in
+  // Join personal room when user is available
   useEffect(() => {
     if (user?._id) {
       socket.emit("join", user._id);
     }
   }, [user]);
 
-  // Unified Socket Listener
+  // Listen for incoming messages
   useEffect(() => {
-    const handleNewMessage = (msg) => {
-      // Logic: Only append message if it belongs to the current open chat
-      const isRelevant = 
-        (msg.sender === selectedUser?._id && msg.receiver === user?._id) || 
-        (msg.sender === user?._id && msg.receiver === selectedUser?._id);
+    const handleMessage = (msg) => {
+      // Only add message if it's part of the current conversation
+      const isFromSelected = msg.sender === selectedUser?._id;
+      const isFromMe = msg.sender === user?._id;
 
-      if (isRelevant) {
-        setMessages((prev) => [...prev, msg]);
+      if (isFromSelected || isFromMe) {
+        setMessages((prev) => {
+          // Prevent duplicates by checking ID (if DB returns it)
+          if (prev.find((m) => m._id === msg._id && msg._id)) return prev;
+          return [...prev, msg];
+        });
       }
     };
 
-    socket.on("receiveMessage", handleNewMessage);
-    return () => socket.off("receiveMessage", handleNewMessage);
+    socket.on("receiveMessage", handleMessage);
+
+    // CLEANUP: Important to prevent duplicate messages
+    return () => {
+      socket.off("receiveMessage", handleMessage);
+    };
   }, [selectedUser, user]);
 
   const openChat = async (u) => {
@@ -60,7 +70,9 @@ const Chat = () => {
     try {
       const res = await getChatHistory(u._id);
       setMessages(res.data.messages);
-    } catch (err) { console.error(err); }
+    } catch (error) {
+      console.error("Error loading history:", error);
+    }
   };
 
   const sendMessage = () => {
@@ -72,9 +84,11 @@ const Chat = () => {
       text: text.trim(),
     };
 
+    // Emit to server
     socket.emit("sendMessage", messageData);
-    // Note: We don't manually setMessages here anymore; 
-    // the socket listener above handles it for both users.
+
+    // NOTE: We no longer setMessages here manually. 
+    // The socket listener above will handle it when the server broadcasts it back.
     setText("");
   };
 
@@ -86,7 +100,7 @@ const Chat = () => {
           
           {/* Sidebar */}
           <div className="col-md-4 chat-sidebar border-end border-dark">
-            <div className="p-4 border-bottom border-dark d-flex justify-content-between align-items-center">
+            <div className="p-4 border-bottom border-dark">
               <h5 className="m-0 fw-bold text-white">Messages</h5>
             </div>
             <div className="user-list overflow-auto">
