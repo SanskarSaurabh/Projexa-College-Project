@@ -27,7 +27,7 @@
   
   /* Sidebar */
   .chat-sidebar {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0.3, 0, 0.1);
     display: flex;
     flex-direction: column;
   }
