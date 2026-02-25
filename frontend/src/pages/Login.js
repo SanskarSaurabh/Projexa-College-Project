@@ -4,8 +4,9 @@ import { loginUser } from "../api/AuthApi";
 import { AuthContext } from "../context/AuthContext";
 import "./Login.css";
 
-// 1. Import the downloaded image
+// 1. Import both the background and the new logo
 import krmuImage from "../assets/krmu-hd.jpg";
+import campusLogo from "../assets/campus-logo.png"; // Ensure the logo is in your assets folder
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -33,11 +34,19 @@ const Login = () => {
         
         {/* LEFT SECTION: FORM */}
         <div className="campus-form-side">
-          <div className="campus-brand">CampusConnect</div>
+          
+          {/* UPDATED BRAND SECTION WITH LOGO */}
+          <div className="campus-brand">
+            <img src={campusLogo} alt="Campus Connect Logo" className="campus-logo-img" />
+            <div className="campus-brand-text">
+              <span className="text-main">Campus</span>
+              <span className="text-sub">connect</span>
+            </div>
+          </div>
           
           <div className="campus-content-box">
             <h2 className="campus-welcome">Welcome Back</h2>
-            <p className="campus-subtitle">Official KRMU Campus Connect Portal</p>
+            <h4 className="campus-subtitle">Official KRMU Campus Connect Portal</h4>
 
             {error && <div className="campus-error-alert">{error}</div>}
 
@@ -85,7 +94,7 @@ const Login = () => {
                 <i className="bi bi-google"></i> Google
               </button>
               <button className="campus-social-item">
-                <i className="bi bi-apple"></i> Apple
+                <i className="bi bi-github"></i> Github
               </button>
             </div>
 
@@ -98,7 +107,6 @@ const Login = () => {
 
         {/* RIGHT SECTION: IMAGE PANE */}
         <div className="campus-visual-side">
-          {/* 2. Style applied here using the imported variable */}
           <div 
             className="campus-image-inset"
             style={{ 
