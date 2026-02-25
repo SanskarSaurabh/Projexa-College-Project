@@ -4,6 +4,9 @@ import { loginUser } from "../api/AuthApi";
 import { AuthContext } from "../context/AuthContext";
 import "./Login.css";
 
+// 1. Import the downloaded image
+import krmuImage from "../assets/krmu-hd.jpg";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,8 +19,6 @@ const Login = () => {
     try {
       const res = await loginUser({ email, password });
       login(res.data);
-
-      // Redirect based on the specific departments you mentioned
       if (res.data.role === "admin") navigate("/admin");
       else if (res.data.role === "placement") navigate("/placements");
       else navigate("/dashboard");
@@ -27,99 +28,93 @@ const Login = () => {
   };
 
   return (
-    <div className="login-viewport d-flex align-items-center justify-content-center">
-      <div className="main-login-container container-fluid p-0 overflow-hidden shadow-2xl">
-        <div className="row g-0 h-100">
+    <div className="campus-viewport">
+      <div className="campus-fullscreen-card">
+        
+        {/* LEFT SECTION: FORM */}
+        <div className="campus-form-side">
+          <div className="campus-brand">CampusConnect</div>
           
-          {/* 🌌 LEFT SIDE: THE VISUAL PANE */}
-          <div className="col-lg-6 d-none d-lg-block position-relative visual-pane">
-            <div className="overlay-content p-5 d-flex flex-column justify-content-between h-100">
-              <div className="brand-logo">KRMU <span className="text-indigo-glow">CONNECT</span></div>
-              <div className="visual-footer">
-                <h3 className="text-white fw-light mb-2">Empowering Careers,</h3>
-                <h3 className="text-white fw-bold">Connecting Campus.</h3>
-                <p className="text-silver-muted small mt-2">Manage placements, share updates, and streamline approvals.</p>
-                <div className="mini-carousel-indicators mt-4">
-                  <span className="dot active"></span>
-                  <span className="dot"></span>
-                  <span className="dot"></span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div className="campus-content-box">
+            <h2 className="campus-welcome">Welcome Back</h2>
+            <p className="campus-subtitle">Official KRMU Campus Connect Portal</p>
 
-          {/* 📝 RIGHT SIDE: THE FORM PANE */}
-          <div className="col-lg-6 form-pane p-5 d-flex flex-column justify-content-center">
-            <div className="form-content mx-auto w-100" style={{ maxWidth: "400px" }}>
-              <div className="text-end mb-4">
-                <Link to="/" className="back-link">Back to website →</Link>
+            {error && <div className="campus-error-alert">{error}</div>}
+
+            <form onSubmit={handleSubmit} className="campus-main-form">
+              <div className="campus-input-field">
+                <label>University Email</label>
+                <input 
+                  type="email" 
+                  placeholder="university.email@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required 
+                />
               </div>
 
-              <h2 className="text-white mb-1">Welcome Back</h2>
-              <p className="text-silver mb-4 small">Official KRMU Campus Connect Portal</p>
-
-              {error && <div className="alert alert-custom py-2 mb-3">{error}</div>}
-
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <input
-                    type="email"
-                    className="form-control login-input"
-                    placeholder="University Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="mb-3 position-relative">
-                  <input
-                    type="password"
-                    className="form-control login-input"
-                    placeholder="Password"
+              <div className="campus-input-field">
+                <label>Password</label>
+                <div className="campus-password-wrapper">
+                  <input 
+                    type="password" 
+                    placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    required
+                    required 
                   />
-                  <i className="bi bi-eye-fill password-eye"></i>
-                </div>
-
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  <div className="form-check">
-                    <input className="form-check-input custom-check" type="checkbox" id="remember" />
-                    <label className="form-check-label text-silver small" htmlFor="remember">Remember me</label>
-                  </div>
-                  <Link to="/forgot" className="text-silver small text-decoration-none">Forgot Password?</Link>
-                </div>
-
-                {/* 🚀 THE SUBMIT BUTTON */}
-                <button type="submit" className="btn btn-submit-indigo w-100 py-2 mb-4">
-                  Submit Credentials
-                </button>
-              </form>
-
-              <div className="divider text-silver small mb-4"><span>Or Sign in with</span></div>
-
-              <div className="row g-2 mb-4">
-                <div className="col-6">
-                  <button className="btn btn-outline-social w-100 small">
-                    <i className="bi bi-google me-2"></i> Google
-                  </button>
-                </div>
-                <div className="col-6">
-                  <button className="btn btn-outline-social w-100 small">
-                    <i className="bi bi-apple me-2"></i> Apple
-                  </button>
+                  <i className="bi bi-eye-fill campus-eye-icon"></i>
                 </div>
               </div>
 
-              <p className="text-center text-silver small mt-2">
-                Need access? <Link to="/register" className="text-indigo-glow fw-bold text-decoration-none">Register here</Link>
-              </p>
+              <div className="campus-extra-actions">
+                <div className="form-check">
+                  <input className="form-check-input" type="checkbox" id="remember" />
+                  <label className="form-check-label" htmlFor="remember">Remember me</label>
+                </div>
+                <Link to="/forgot" className="forgot-link">Forgot Password?</Link>
+              </div>
+
+              <button type="submit" className="campus-submit-btn">Submit Credentials</button>
+            </form>
+
+            <div className="campus-or-divider"><span>Or Sign in with</span></div>
+
+            <div className="campus-social-group">
+              <button className="campus-social-item">
+                <i className="bi bi-google"></i> Google
+              </button>
+              <button className="campus-social-item">
+                <i className="bi bi-apple"></i> Apple
+              </button>
+            </div>
+
+            <div className="campus-form-footer">
+              <Link to="/register" className="register-link">Need access? <span>Register here</span></Link>
+              <Link to="/" className="back-link">Back to website →</Link>
             </div>
           </div>
-
         </div>
+
+        {/* RIGHT SECTION: IMAGE PANE */}
+        <div className="campus-visual-side">
+          {/* 2. Style applied here using the imported variable */}
+          <div 
+            className="campus-image-inset"
+            style={{ 
+              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url(${krmuImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+             <div className="campus-overlay-text">
+                <h3>Empowering Careers,</h3>
+                <h3 className="fw-bold">Connecting Campus.</h3>
+                <p>Official Placement & Training Portal of K.R. Mangalam University.</p>
+             </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

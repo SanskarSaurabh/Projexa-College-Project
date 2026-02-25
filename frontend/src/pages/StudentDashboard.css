@@ -1,85 +1,113 @@
-:root {
-    --bg-dark: #08080a;
-    --card-slate: #1c1b29;
-    --indigo-glow: #6358dc;
-    --silver-text: #94a3b8;
-  }
-  
-  .student-wrapper {
-    min-height: 100vh;
-    background-color: var(--bg-dark);
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-  }
-  
-  .badge-system {
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 2px;
-    color: var(--indigo-glow);
-  }
-  
-  /* 🍱 BENTO CARDS */
-  .bento-card {
-    background: var(--card-slate);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 24px;
-    padding: 35px;
-    height: 100%;
-    position: relative;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .bento-card:hover {
-    transform: translateY(-10px);
-    border-color: var(--indigo-glow);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  }
-  
-  .card-icon {
-    width: 50px;
-    height: 50px;
-    background: rgba(99, 88, 220, 0.1);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    color: var(--indigo-glow);
-    margin-bottom: 25px;
-  }
-  
-  .card-content h3 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 10px;
-  }
-  
-  .card-content p {
-    color: var(--silver-text);
-    font-size: 0.95rem;
-    line-height: 1.5;
-  }
-  
-  .card-arrow {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    color: var(--silver-text);
-    opacity: 0;
-    transition: 0.3s;
-  }
-  
-  .bento-card:hover .card-arrow {
-    opacity: 1;
-    transform: translate(5px, -5px);
-  }
-  
-  /* Specific Card Accents */
-  .feed-card:hover { border-left: 4px solid #60a5fa; }
-  .chat-card:hover { border-left: 4px solid #a78bfa; }
-  .jobs-card:hover { border-left: 4px solid #34d399; }
+/* 🌑 MAIN VIEWPORT */
+.student-wrapper {
+  background-color: #0a0c10 !important; /* The exact Charcoal Black from Login */
+  min-height: 100vh;
+  width: 100%;
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+/* 🏷️ TOP ACCENT BADGE */
+.badge-system {
+  background: rgba(129, 140, 248, 0.1);
+  color: #818cf8; /* Indigo accent from the login buttons */
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  border: 1px solid rgba(129, 140, 248, 0.3);
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+/* 🔡 TYPOGRAPHY */
+.dashboard-header h2 {
+  font-weight: 800;
+  font-size: 3rem;
+  letter-spacing: -1.5px;
+  color: #ffffff;
+  margin-top: 15px;
+}
+
+.text-silver {
+  color: #a0a0a0 !important; /* Matches Login/Register subtitle exactly */
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+/* 🍱 BENTO CARDS (Glassmorphism) */
+.bento-card {
+  background: rgba(255, 255, 255, 0.03); /* Subtle translucent surface */
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Faint border for glass look */
+  border-radius: 30px; /* Matching your image-inset radius */
+  padding: 40px;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; 
+  min-height: 300px;
+  backdrop-filter: blur(12px); /* Frosty background effect */
+}
+
+.bento-card:hover {
+  transform: translateY(-12px);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(129, 140, 248, 0.5); /* Indigo glow on hover */
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* 🎨 ICON BOXES */
+.card-icon {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  color: #ffffff;
+}
+
+/* 🎯 CARD CONTENT */
+.card-content h3 {
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.card-content p {
+  color: #a0a0a0; /* Consistent silver-muted text */
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ↗️ INTERACTIVE ARROW */
+.card-arrow {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.bento-card:hover .card-arrow {
+  color: #818cf8; /* Turns Indigo on hover */
+  transform: translate(5px, -5px);
+}
+
+/* 🌈 CARD SPECIFIC HOVER ACCENTS (Bottom Glow Lines) */
+.feed-card:hover { border-bottom: 4px solid #6366f1; }
+.chat-card:hover { border-bottom: 4px solid #10b981; }
+.jobs-card:hover { border-bottom: 4px solid #f59e0b; }
