@@ -54,6 +54,10 @@
   height: 100%;
   box-shadow: 0 25px 60px rgba(0,0,0,0.08);
   overflow: hidden;
+
+  /* FIX FOR SCROLL */
+  display: flex;
+  flex-direction: column;
 }
 
 /* --- Sidebar --- */
@@ -109,6 +113,13 @@
   box-shadow: 0 4px 12px rgba(255,122,0,0.35);
 }
 
+/* --- VIEWPORT FIX --- */
+.chat-viewport {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 /* --- Viewport --- */
 .viewport-header {
   padding: 15px 25px;
@@ -139,10 +150,26 @@
 
 /* --- Messages Area --- */
 .messages-flow {
-  flex-grow: 1;
+  flex: 1;
   padding: 25px;
   overflow-y: auto;
   background: rgba(255,255,255,0.25);
+
+  display: flex;
+  flex-direction: column;
+
+  /* SCROLL FIX */
+  min-height: 0;
+}
+
+/* Scrollbar styling */
+.messages-flow::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-flow::-webkit-scrollbar-thumb {
+  background: #ff7a00;
+  border-radius: 10px;
 }
 
 .msg-wrapper {

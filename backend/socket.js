@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import MessageModel from "./models/message.models.js";
 
 export const initSocket = (server) => {
+
   const io = new Server(server, {
     cors: {
       origin: [
@@ -16,18 +17,25 @@ export const initSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
+
     console.log("User connected:", socket.id);
 
     /* ================= JOIN USER ROOM ================= */
+
     socket.on("join", (userId) => {
-      socket.leaveAll(); // Prevent duplicate joins
+
       socket.join(userId);
-      console.log(`User ${userId} joined their personal room`);
+
+      console.log(`User ${userId} joined room`);
+
     });
 
     /* ================= SEND MESSAGE ================= */
+
     socket.on("sendMessage", async (data) => {
+
       try {
+
         const { sender, receiver, text } = data;
 
         const message = await MessageModel.create({
@@ -36,20 +44,30 @@ export const initSocket = (server) => {
           text,
         });
 
-        // Send to receiver's room
+        /* Send message to receiver */
+
         io.to(receiver).emit("receiveMessage", message);
 
-        // Send confirmation ONLY to current sender socket
-        socket.emit("receiveMessage", message);
+        /* Send message back to sender */
+
+        io.to(sender).emit("receiveMessage", message);
 
       } catch (error) {
+
         console.error("Socket Message Error:", error);
+
       }
+
     });
 
     /* ================= DISCONNECT ================= */
+
     socket.on("disconnect", () => {
+
       console.log("User disconnected:", socket.id);
+
     });
+
   });
+
 };
