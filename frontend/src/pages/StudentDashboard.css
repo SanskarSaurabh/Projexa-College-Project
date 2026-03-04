@@ -1,113 +1,259 @@
-/* 🌑 MAIN VIEWPORT */
-.student-wrapper {
-  background-color: #0a0c10 !important; /* The exact Charcoal Black from Login */
+/* --- Student Dashboard Aesthetic --- */
+.campus-view {
   min-height: 100vh;
-  width: 100%;
-  color: #ffffff;
-  font-family: 'Inter', -apple-system, sans-serif;
-}
-
-/* 🏷️ TOP ACCENT BADGE */
-.badge-system {
-  background: rgba(129, 140, 248, 0.1);
-  color: #818cf8; /* Indigo accent from the login buttons */
-  padding: 6px 14px;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  border: 1px solid rgba(129, 140, 248, 0.3);
-  display: inline-block;
-  text-transform: uppercase;
-}
-
-/* 🔡 TYPOGRAPHY */
-.dashboard-header h2 {
-  font-weight: 800;
-  font-size: 3rem;
-  letter-spacing: -1.5px;
-  color: #ffffff;
-  margin-top: 15px;
-}
-
-.text-silver {
-  color: #a0a0a0 !important; /* Matches Login/Register subtitle exactly */
-  font-size: 1.1rem;
-  font-weight: 400;
-}
-
-/* 🍱 BENTO CARDS (Glassmorphism) */
-.bento-card {
-  background: rgba(255, 255, 255, 0.03); /* Subtle translucent surface */
-  border: 1px solid rgba(255, 255, 255, 0.08); /* Faint border for glass look */
-  border-radius: 30px; /* Matching your image-inset radius */
-  padding: 40px;
-  height: 100%;
+  background-color: #FAF9F6; /* Cream background like login */
   position: relative;
-  overflow: hidden;
-  transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+  overflow-x: hidden;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Reusing the Blobs from Login */
+.orange-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+  opacity: 0.35;
+  animation: float 10s infinite alternate;
+}
+.blob-1 { width: 500px; height: 500px; background: #FF7A00; top: -100px; right: -50px; }
+.blob-2 { width: 400px; height: 400px; background: #FFB800; bottom: -100px; left: -50px; }
+
+@keyframes float {
+  from { transform: translate(0, 0); }
+  to { transform: translate(30px, 50px); }
+}
+
+/* Brand styling from Login */
+.krmu-brand { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+.brand-logo-circle {
+  width: 50px; height: 50px; background: #FF7A00; color: white;
+  border-radius: 15px; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1.5rem;
+}
+.brand-titles h1 { font-size: 2rem; font-weight: 800; color: #1A1C1E; margin: 0; }
+.brand-titles p { color: #666; font-size: 0.95rem; }
+
+/* Premium Glass Cards (Bento Style) */
+.premium-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 30px;
+  padding: 35px;
+  height: 100%;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; 
-  min-height: 300px;
-  backdrop-filter: blur(12px); /* Frosty background effect */
+  position: relative;
+  z-index: 1;
 }
 
-.bento-card:hover {
-  transform: translateY(-12px);
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(129, 140, 248, 0.5); /* Indigo glow on hover */
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+.bento-item:hover {
+  transform: translateY(-10px);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 20px 40px rgba(255, 122, 0, 0.1);
+  border-color: #FF7A00;
 }
 
-/* 🎨 ICON BOXES */
-.card-icon {
+.bento-icon-box {
+  width: 60px; height: 60px; background: #FFF4E6;
+  color: #FF7A00; border-radius: 18px; display: flex;
+  align-items: center; justify-content: center;
+  font-size: 1.8rem; margin-bottom: 25px;
+  transition: 0.3s;
+}
+
+.bento-item:hover .bento-icon-box {
+  background: #FF7A00; color: white;
+}
+
+.bento-text h3 { font-size: 1.4rem; font-weight: 700; color: #1A1C1E; margin-bottom: 10px; }
+.bento-text p { color: #666; font-size: 0.9rem; line-height: 1.6; }
+
+.bento-footer {
+  margin-top: auto; padding-top: 20px; display: flex;
+  align-items: center; gap: 10px; color: #FF7A00;
+  font-weight: 700; font-size: 0.9rem; opacity: 0;
+  transform: translateX(-10px); transition: 0.3s;
+}
+
+.bento-item:hover .bento-footer {
+  opacity: 1; transform: translateX(0);
+}
+
+.badge-system {
+  background: rgba(255, 122, 0, 0.1); color: #FF7A00;
+  padding: 5px 12px; border-radius: 8px; font-weight: 800;
+  font-size: 0.7rem; letter-spacing: 1px;
+}
+
+/* Animation */
+.slide-up { animation: slideUp 0.6s ease-out forwards; opacity: 0; }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* 1. Enhanced Card Base */
+.premium-card.bento-item {
+  position: relative;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 30px;
+  padding: 35px;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); /* Smoother curve */
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* 2. The "Glow" under-layer (Hidden by default) */
+.bento-item::before {
+  content: "";
   position: absolute;
-  top: 40px;
-  left: 40px;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at top right, rgba(255, 122, 0, 0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+/* 3. Combined Hover Effects */
+.bento-item:hover {
+  transform: translateY(-12px) scale(1.02); /* Slight lift and grow */
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 122, 0, 0.5);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.05),
+    0 0 20px rgba(255, 122, 0, 0.1); /* Soft orange glow */
+}
+
+.bento-item:hover::before {
+  opacity: 1;
+}
+
+/* 4. Icon Box Animation */
+.bento-icon-box {
   width: 60px;
   height: 60px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #FFF4E6;
+  color: #FF7A00;
   border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.75rem;
-  color: #ffffff;
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bouncy effect */
 }
 
-/* 🎯 CARD CONTENT */
-.card-content h3 {
-  font-weight: 700;
-  font-size: 1.6rem;
-  color: #ffffff;
-  margin-bottom: 12px;
+.bento-item:hover .bento-icon-box {
+  background: #FF7A00;
+  color: white;
+  transform: rotate(10deg) scale(1.1); /* Tilt and pop */
+  box-shadow: 0 10px 20px rgba(255, 122, 0, 0.3);
 }
 
-.card-content p {
-  color: #a0a0a0; /* Consistent silver-muted text */
-  font-size: 1rem;
-  line-height: 1.6;
-  margin: 0;
+/* 5. Text Emphasis */
+.bento-item h3 {
+  transition: color 0.3s ease;
 }
 
-/* ↗️ INTERACTIVE ARROW */
-.card-arrow {
+.bento-item:hover h3 {
+  color: #FF7A00; /* Title turns orange on hover */
+}
+
+/* 6. Arrow Indicator Animation */
+.bento-footer i {
+  transition: transform 0.3s ease;
+}
+
+.bento-item:hover .bento-footer i {
+  transform: translateX(8px); /* Arrow shoots forward */
+}
+/* 1. Card Container Adjustment */
+.premium-card.bento-item {
+  position: relative;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 30px;
+  padding: 35px;
+  transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+  cursor: pointer;
+  z-index: 1;
+  /* CRITICAL: Allow hover effects to bleed outside the card */
+  overflow: visible !important; 
+}
+
+/* 2. The "External Glow" Effect (Comes outside the card) */
+.bento-item::after {
+  content: "";
   position: absolute;
-  top: 40px;
-  right: 40px;
-  color: rgba(255, 255, 255, 0.2);
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 30px;
+  background: var(--primary-orange);
+  filter: blur(30px);
+  opacity: 0;
+  z-index: -1;
+  transition: all 0.5s ease;
+  transform: scale(0.9);
+}
+
+/* 3. Hover Interaction */
+.bento-item:hover {
+  transform: translateY(-15px) scale(1.03); /* Lifts higher */
+  background: rgba(255, 255, 255, 1);
+  border-color: var(--primary-orange);
+  /* Massive spread shadow that goes outside */
+  box-shadow: 0 30px 60px rgba(255, 122, 0, 0.15); 
+}
+
+/* Make the blur "explode" outside on hover */
+.bento-item:hover::after {
+  opacity: 0.2;
+  transform: scale(1.1); /* Expands larger than the card */
+}
+
+/* 4. The Icon "Breaking Out" */
+.bento-icon-box {
+  width: 60px;
+  height: 60px;
+  background: #FFF4E6;
+  color: #FF7A00;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 0 rgba(255, 122, 0, 0);
+}
+
+.bento-item:hover .bento-icon-box {
+  background: #FF7A00;
+  color: white;
+  transform: translateY(-20px) rotate(-10deg); /* Icon jumps "out" of its spot */
+  box-shadow: 0 15px 30px rgba(255, 122, 0, 0.4);
+}
+
+/* 5. Floating Decoration (Small dots that appear outside) */
+.bento-item::before {
+  content: "✦";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  color: var(--primary-orange);
   font-size: 1.5rem;
-  transition: all 0.3s ease;
+  opacity: 0;
+  transition: 0.4s;
+  transform: rotate(-20deg) scale(0.5);
 }
 
-.bento-card:hover .card-arrow {
-  color: #818cf8; /* Turns Indigo on hover */
-  transform: translate(5px, -5px);
+.bento-item:hover::before {
+  opacity: 1;
+  transform: rotate(0deg) scale(1) translate(15px, -15px); /* Glides outside */
 }
-
-/* 🌈 CARD SPECIFIC HOVER ACCENTS (Bottom Glow Lines) */
-.feed-card:hover { border-bottom: 4px solid #6366f1; }
-.chat-card:hover { border-bottom: 4px solid #10b981; }
-.jobs-card:hover { border-bottom: 4px solid #f59e0b; }

@@ -9,14 +9,17 @@ import AdminPostApproval from "./pages/AdminPostApproval";
 import PlacementDashboard from "./pages/PlacementDashboard";
 import JobList from "./pages/JobList";
 import Chat from "./pages/chat";
-
-
+import AdminAnnouncement from "./pages/AdminAnnouncement";   // NEW IMPORT
+import { Toaster } from 'react-hot-toast';
 
 
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-center" reverseOrder={false} />
+
       <Routes>
+
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -39,53 +42,62 @@ function App() {
           }
         />
 
-<Route
-  path="/feed"
-  element={
-    <ProtectedRoute>
-      <Feed />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/chat"
-  element={
-    <ProtectedRoute>
-      <Chat />
-    </ProtectedRoute>
-  }
-/>
+        <Route
+          path="/admin/announcement"
+          element={
+            <ProtectedRoute>
+              <AdminAnnouncement />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route
+          path="/feed"
+          element={
+            <ProtectedRoute>
+              <Feed />
+            </ProtectedRoute>
+          }
+        />
 
-<Route
-  path="/placements"
-  element={
-    <ProtectedRoute>
-      <PlacementDashboard />
-    </ProtectedRoute>
-  }
-/>
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          }
+        />
 
-<Route
-  path="/jobs"
-  element={
-    <ProtectedRoute>
-      <JobList />
-    </ProtectedRoute>
-  }
-/>
+        <Route
+          path="/placements"
+          element={
+            <ProtectedRoute>
+              <PlacementDashboard />
+            </ProtectedRoute>
+          }
+        />
 
+        <Route
+          path="/jobs"
+          element={
+            <ProtectedRoute>
+              <JobList />
+            </ProtectedRoute>
+          }
+        />
 
-<Route
-  path="/admin/posts"
-  element={
-    <ProtectedRoute>
-      <AdminPostApproval />
-    </ProtectedRoute>
-  }
-/>
+        <Route
+          path="/admin/posts"
+          element={
+            <ProtectedRoute>
+              <AdminPostApproval />
+            </ProtectedRoute>
+          }
+        />
 
       </Routes>
+
     </BrowserRouter>
   );
 }

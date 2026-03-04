@@ -2,20 +2,19 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getPendingUsers, approveUser, rejectUser } from "../api/AdminApi";
 import Navbar from "../components/Navbar";
-import "./AdminDashboard.css"; // We'll create this next
+import toast from "react-hot-toast";
+import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
+
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const fetchUsers = async () => {
     try {
       const res = await getPendingUsers();
       setUsers(res.data);
     } catch (error) {
-      console.error("Error fetching users");
-    } finally {
-      setLoading(false);
+      toast.error("Error loading user queue");
     }
   };
 
@@ -23,95 +22,124 @@ const AdminDashboard = () => {
     fetchUsers();
   }, []);
 
-  const handleApprove = async (id) => {
-    await approveUser(id);
-    fetchUsers();
-  };
+  const handleAction = async (id, actionType) => {
 
-  const handleReject = async (id) => {
-    await rejectUser(id);
-    fetchUsers();
-  };
+    const loadToast = toast.loading("Processing...");
 
-  if (loading) return (
-    <div className="admin-loader">
-      <div className="spinner-border text-indigo" role="status"></div>
-    </div>
-  );
+    try {
+
+      if (actionType === "approve") await approveUser(id);
+      else await rejectUser(id);
+
+      setUsers(prev => prev.filter(user => user._id !== id));
+
+      toast.success(
+        `User ${actionType === "approve" ? "Verified" : "Rejected"}`,
+        { id: loadToast }
+      );
+
+    } catch (err) {
+      toast.error("Action failed", { id: loadToast });
+    }
+  };
 
   return (
-    <div className="admin-wrapper">
+    <div className="admin-page-bg">
+
       <Navbar />
 
-      <div className="container py-5">
-        <div className="admin-header d-flex justify-content-between align-items-end mb-5">
-          <div>
-            <span className="badge-system mb-2">MANAGEMENT ENGINE</span>
-            <h2 className="display-6 fw-bold text-white">Admin Dashboard</h2>
+      <main className="admin-main-content">
+
+        <div className="admin-top-bar">
+
+          <div className="admin-title-section">
+            <h1>User Verification</h1>
+            <p>Review institutional registration requests</p>
           </div>
-          
-          <nav className="admin-nav-pills">
-            <Link to="/admin" className="nav-pill active">Verify Users</Link>
-            <Link to="/admin/posts" className="nav-pill">Verify Posts</Link>
-          </nav>
+
+          <div className="role-switcher">
+
+            <button className="role-btn active">
+              Verify Users
+            </button>
+
+            <Link to="/admin/announcement" className="role-btn">
+              Campus Announcement
+            </Link>
+
+            <Link to="/admin/posts" className="role-btn">
+              Verify Posts
+            </Link>
+
+          </div>
+
         </div>
 
-        <div className="admin-card p-4">
-          <div className="card-header-flex d-flex justify-content-between mb-4">
-            <h5 className="text-white m-0">Pending Approvals</h5>
-            <span className="text-silver small">{users.length} requests found</span>
-          </div>
+        <div className="admin-table-card">
 
-          {users.length === 0 ? (
-            <div className="empty-state text-center py-5">
-              <i className="bi bi-shield-check display-1 text-indigo-glow mb-3"></i>
-              <p className="text-silver">The queue is clear. No pending verifications.</p>
-            </div>
-          ) : (
-            <div className="table-responsive">
-              <table className="table custom-admin-table">
-                <thead>
-                  <tr>
-                    <th>Full Name</th>
-                    <th>Email Address</th>
-                    <th>Requested Role</th>
-                    <th className="text-end">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user) => (
-                    <tr key={user._id} className="align-middle">
-                      <td className="text-white fw-semibold">{user.name}</td>
-                      <td className="text-silver">{user.email}</td>
-                      <td>
-                        <span className={`role-tag ${user.role}`}>
-                          {user.role}
-                        </span>
-                      </td>
-                      <td className="text-end">
-                        <button 
-                          className="btn-approve me-2" 
-                          onClick={() => handleApprove(user._id)}
-                          title="Approve Access"
+          <div className="table-responsive">
+
+            <table className="user-verification-table">
+
+              <thead>
+                <tr>
+                  <th>Full Name</th>
+                  <th>University Email</th>
+                  <th>Role</th>
+                  <th className="text-center">Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                {users.map(user => (
+
+                  <tr key={user._id}>
+
+                    <td>{user.name}</td>
+
+                    <td>{user.email}</td>
+
+                    <td>
+                      <span className={`role-tag ${user.role}`}>
+                        {user.role}
+                      </span>
+                    </td>
+
+                    <td>
+                      <div className="action-btns-group">
+
+                        <button
+                          className="btn-circle-check"
+                          onClick={() => handleAction(user._id,"approve")}
                         >
                           <i className="bi bi-check-lg"></i>
                         </button>
-                        <button 
-                          className="btn-reject" 
-                          onClick={() => handleReject(user._id)}
-                          title="Reject Request"
+
+                        <button
+                          className="btn-circle-x"
+                          onClick={() => handleAction(user._id,"reject")}
                         >
                           <i className="bi bi-x-lg"></i>
                         </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+
+                      </div>
+                    </td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
         </div>
-      </div>
+
+      </main>
+
     </div>
   );
 };

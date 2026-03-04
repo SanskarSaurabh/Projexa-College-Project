@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import "./Navbar.css";
@@ -7,89 +7,126 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleLogout = () => {
     logout();
     navigate("/");
   };
 
-  // Function to determine where the Logo should take the user
+  // Standardize role
+  const userRole = user?.role?.toLowerCase();
+
   const getHomeRoute = () => {
-    if (user?.role === "admin") return "/admin";
-    if (user?.role === "placement") return "/placements";
-    return "/dashboard"; // Students
+    if (userRole === "admin") return "/admin";
+    if (userRole === "placement") return "/placements";
+    return "/dashboard";
   };
 
-  const isActive = (path) => location.pathname === path ? "active-link" : "";
+  // Improved active route detection
+  const isActive = (path) =>
+    location.pathname.startsWith(path) ? "nav-item-active" : "";
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-custom sticky-top">
-      <div className="container">
-        {/* Brand Logo - Dynamic Link based on Role */}
-        <Link className="navbar-brand fw-bold text-white" to={getHomeRoute()}>
-          KRMU <span className="text-indigo-glow">CONNECT</span>
+    <nav className={`campus-navbar ${isScrolled ? "navbar-scrolled" : ""}`}>
+      <div className="nav-container-pill">
+
+        {/* Brand Logo */}
+        <Link className="nav-brand-area" to={getHomeRoute()}>
+          <div className="nav-logo-box">K</div>
+          <div className="nav-logo-text">
+            <span className="logo-main">KRMU</span>
+            <span className="logo-sub">Connect</span>
+          </div>
         </Link>
 
-        {/* Mobile Toggle */}
-        <button className="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <i className="bi bi-list text-white fs-2"></i>
-        </button>
+        {/* Navigation Links */}
+        <div className="nav-links-wrapper">
+          <ul className="nav-links-list">
 
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav mx-auto gap-lg-4">
-            
-            {/* 🛡️ ADMIN NAVIGATION */}
-            {user?.role === "admin" && (
+            {/* -------- ADMIN -------- */}
+            {userRole === "admin" && (
               <>
-                <li className="nav-item">
-                  <Link className={`nav-link ${isActive("/admin")}`} to="/admin">Verify Users</Link>
+                <li className={`nav-link-item ${isActive("/admin")}`}>
+                  <Link to="/admin">Verifications</Link>
                 </li>
-                <li className="nav-item">
-                  <Link className={`nav-link ${isActive("/admin/posts")}`} to="/admin/posts">Verify Posts</Link>
+
+                <li className={`nav-link-item ${isActive("/admin/announcement")}`}>
+                  <Link to="/admin/announcement">Announcements</Link>
+                </li>
+
+                <li className={`nav-link-item ${isActive("/admin/posts")}`}>
+                  <Link to="/admin/posts">Moderation</Link>
                 </li>
               </>
             )}
-            
-            {/* 💼 PLACEMENT OFFICER NAVIGATION */}
-            {user?.role === "placement" && (
-              <li className="nav-item">
-                <Link className={`nav-link ${isActive("/placements")}`} to="/placements">Job Management</Link>
+
+            {/* -------- PLACEMENT -------- */}
+            {userRole === "placement" && (
+              <li className={`nav-link-item ${isActive("/placements")}`}>
+                <Link to="/placements">Placement Hub</Link>
               </li>
             )}
 
-            {/* 🎓 STUDENT NAVIGATION ONLY */}
-            {user?.role === "student" && (
+            {/* -------- STUDENT -------- */}
+            {userRole === "student" && (
               <>
-                <li className="nav-item">
-                  <Link className={`nav-link ${isActive("/dashboard")}`} to="/dashboard">Dashboard</Link>
+                <li className={`nav-link-item ${isActive("/dashboard")}`}>
+                  <Link to="/dashboard">Dashboard</Link>
                 </li>
-                <li className="nav-item">
-                  <Link className={`nav-link ${isActive("/feed")}`} to="/feed">Campus Feed</Link>
+
+                <li className={`nav-link-item ${isActive("/feed")}`}>
+                  <Link to="/feed">Campus Feed</Link>
                 </li>
-                <li className="nav-item">
-                  <Link className={`nav-link ${isActive("/jobs")}`} to="/jobs">Opportunities</Link>
+
+                <li className={`nav-link-item ${isActive("/jobs")}`}>
+                  <Link to="/jobs">Job Listings</Link>
+                </li>
+
+                <li className={`nav-link-item ${isActive("/chat")}`}>
+                  <Link to="/chat">Messages</Link>
                 </li>
               </>
             )}
-          </ul>
 
-          {/* User Profile & Logout */}
-          <div className="d-flex align-items-center gap-3 mt-3 mt-lg-0">
-            <div className="user-profile-nav d-none d-md-flex align-items-center gap-2">
-              <div className="avatar-circle">
-                {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
-              </div>
-              <div className="user-info-text">
-                <p className="m-0 text-white small fw-bold">{user?.name || "User"}</p>
-                <span className="text-silver-muted smaller text-uppercase">{user?.role}</span>
-              </div>
-            </div>
-            
-            <button className="btn-logout-custom" onClick={handleLogout}>
-              <i className="bi bi-box-arrow-right me-2"></i> Logout
-            </button>
-          </div>
+          </ul>
         </div>
+
+        {/* User Profile */}
+        <div className="nav-user-controls">
+
+          <div className="nav-profile-pill">
+            <div className="nav-avatar-circle">
+              {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+            </div>
+
+            <div className="nav-user-labels">
+              <span className="nav-username-display">
+                {user?.name?.split(" ")[0]}
+              </span>
+
+              <span className="nav-role-badge">
+                {userRole}
+              </span>
+            </div>
+          </div>
+
+          <button
+            className="nav-exit-btn"
+            onClick={handleLogout}
+            title="Logout"
+          >
+            <i className="bi bi-box-arrow-right"></i>
+          </button>
+
+        </div>
+
       </div>
     </nav>
   );

@@ -42,70 +42,102 @@ const PlacementDashboard = () => {
   };
 
   return (
-    <div className="placement-wrapper">
+    <div className="pd-root">
       <Navbar />
-      <div className="container py-5">
-        <header className="mb-5">
-          <span className="badge-system mb-2">CORPORATE RELATIONS</span>
-          <h2 className="display-6 fw-bold text-white">Placement Management</h2>
+      
+      {/* Background Blobs */}
+      <div className="pd-glow-layer">
+        <div className="pd-glow pd-orange"></div>
+        <div className="pd-glow pd-yellow"></div>
+      </div>
+
+      <div className="container pd-content">
+        <header className="pd-header mb-5">
+          <span className="pd-badge">Internal Management</span>
+          <h2 className="pd-title">Placement <span className="text-orange">Hub</span></h2>
+          <p className="pd-subtitle">Configure opportunities and filter eligible candidates.</p>
         </header>
 
         <div className="row g-4">
           {/* POST JOB FORM */}
           <div className="col-lg-4">
-            <div className="glass-card p-4">
-              <h5 className="text-white mb-4 fw-bold">Post New Job</h5>
-              <form onSubmit={handleSubmit} className="placement-form">
-                <input className="form-control mb-3" name="companyName" placeholder="Company Name" value={form.companyName} onChange={handleChange} required />
-                <input className="form-control mb-3" name="role" placeholder="Job Role" value={form.role} onChange={handleChange} required />
-                <input className="form-control mb-3" name="department" placeholder="Department" value={form.department} onChange={handleChange} required />
+            <div className="pd-glass-card p-4">
+              <div className="pd-card-head mb-4">
+                <i className="bi bi-plus-circle-fill me-2 text-orange"></i>
+                <h5 className="m-0 fw-bold">Post Opportunity</h5>
+              </div>
+              
+              <form onSubmit={handleSubmit} className="pd-form-stack">
+                <div className="pd-input-group">
+                  <i className="bi bi-building"></i>
+                  <input name="companyName" placeholder="Company Name" value={form.companyName} onChange={handleChange} required />
+                </div>
+                <div className="pd-input-group">
+                  <i className="bi bi-person-workspace"></i>
+                  <input name="role" placeholder="Job Role" value={form.role} onChange={handleChange} required />
+                </div>
+                <div className="pd-input-group">
+                  <i className="bi bi-mortarboard"></i>
+                  <input name="department" placeholder="Department" value={form.department} onChange={handleChange} required />
+                </div>
+                
                 <div className="row g-2 mb-4">
                   <div className="col-6">
-                    <input className="form-control" name="minMarks" placeholder="Min %" value={form.minMarks} onChange={handleChange} required />
+                    <div className="pd-input-group small">
+                      <input name="minMarks" placeholder="Min %" value={form.minMarks} onChange={handleChange} required />
+                    </div>
                   </div>
                   <div className="col-6">
-                    <input className="form-control" name="maxBacklogs" placeholder="Max Backlogs" value={form.maxBacklogs} onChange={handleChange} required />
+                    <div className="pd-input-group small">
+                      <input name="maxBacklogs" placeholder="Max Bklg" value={form.maxBacklogs} onChange={handleChange} required />
+                    </div>
                   </div>
                 </div>
-                <button type="submit" className="btn btn-indigo w-100 fw-bold">Publish Opportunity</button>
+                
+                <button type="submit" className="pd-btn-gradient">
+                  Publish Job <i className="bi bi-chevron-right ms-1"></i>
+                </button>
               </form>
             </div>
           </div>
 
           {/* JOB LIST & ELIGIBLE STUDENTS */}
           <div className="col-lg-8">
-            <div className="glass-card p-4 mb-4">
-              <h5 className="text-white mb-4 fw-bold">Current Opportunities</h5>
-              <div className="job-scroll-area">
+            <div className="pd-glass-card p-4 mb-4">
+              <h5 className="fw-bold mb-4">Active Listings</h5>
+              <div className="pd-scroll-area">
+                {jobs.length === 0 ? <p className="text-muted text-center py-4">No jobs posted yet.</p> : null}
                 {jobs.map((job) => (
-                  <div key={job._id} className={`job-item p-3 mb-2 ${activeJobId === job._id ? 'active' : ''}`}>
-                    <div className="d-flex justify-content-between align-items-center">
-                      <div>
-                        <h6 className="text-white mb-1 fw-bold">{job.companyName}</h6>
-                        <span className="text-white-50 smaller uppercase">{job.role}</span>
-                      </div>
-                      <button className="btn btn-outline-indigo btn-sm fw-bold" onClick={() => handleEligible(job._id)}>
-                        Check Eligibility
-                      </button>
+                  <div key={job._id} className={`pd-job-item ${activeJobId === job._id ? 'active' : ''}`}>
+                    <div className="pd-job-meta">
+                      <h6 className="fw-bold m-0">{job.companyName}</h6>
+                      <span className="pd-role-tag">{job.role}</span>
                     </div>
+                    <button className="pd-check-btn" onClick={() => handleEligible(job._id)}>
+                      Review Students <i className="bi bi-people-fill ms-1"></i>
+                    </button>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* HIGH-VISIBILITY STUDENT TABLE */}
+            {/* STUDENT TABLE */}
             {activeJobId && (
-              <div className="glass-card p-4 content-fade-in">
-                <h5 className="text-white mb-4 fw-bold">Eligible Candidates</h5>
+              <div className="pd-glass-card p-4 slide-up-anim">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <h5 className="fw-bold m-0">Eligible Candidates</h5>
+                  <span className="pd-count-badge">{eligible.length} Found</span>
+                </div>
+                
                 {eligible.length === 0 ? (
-                  <div className="no-data-alert">No students meet the requirements for this role.</div>
+                  <div className="pd-empty-state">No candidates meet these specific criteria.</div>
                 ) : (
                   <div className="table-responsive">
-                    <table className="table high-visibility-table">
+                    <table className="pd-aesthetic-table">
                       <thead>
                         <tr>
-                          <th>Student Name</th>
-                          <th>Dept.</th>
+                          <th>Name</th>
+                          <th>Department</th>
                           <th>Marks %</th>
                           <th>Backlogs</th>
                         </tr>
@@ -113,12 +145,12 @@ const PlacementDashboard = () => {
                       <tbody>
                         {eligible.map((s) => (
                           <tr key={s._id}>
-                            <td className="text-white fw-bold">{s.name}</td>
-                            <td className="text-light">{s.department}</td>
-                            <td><span className="marks-pill">{s.marks}%</span></td>
+                            <td className="fw-bold text-dark">{s.name}</td>
+                            <td><span className="pd-dept-pill">{s.department}</span></td>
+                            <td className="fw-bold text-orange">{s.marks}%</td>
                             <td>
-                              <span className={`status-badge ${s.backlogs === 0 ? 'safe' : 'warn'}`}>
-                                {s.backlogs} Backlogs
+                              <span className={`pd-status-pill ${s.backlogs === 0 ? 'safe' : 'risk'}`}>
+                                {s.backlogs} Bklg
                               </span>
                             </td>
                           </tr>

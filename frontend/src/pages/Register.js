@@ -1,125 +1,106 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../api/AuthApi";
-import "./Login.css"; // Using the same CSS for consistent layout
-
-// Import the same background image for design continuity
-import krmuImage from "../assets/krmu.jpg";
+import toast from "react-hot-toast";
+import "./Login.css"; 
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
-
+  const [userRole, setUserRole] = useState("student");
+  
   const navigate = useNavigate();
+  const API_BASE_URL = "http://localhost:5000/api/auth";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setMessage("");
+    const loadToast = toast.loading(`Creating ${userRole} account...`);
     try {
-      const res = await registerUser({ name, email, password });
-      setMessage(res.data.message || "Registration successful!");
+      const res = await registerUser({ name, email, password, role: userRole });
+      toast.success(res.data.message || "Registration Successful!", { id: loadToast });
       setTimeout(() => navigate("/"), 2000);
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      toast.error(err.response?.data?.message || "Registration failed", { id: loadToast });
     }
   };
 
   return (
-    <div className="campus-viewport">
-      <div className="campus-fullscreen-card">
-        
-        {/* LEFT SECTION: FORM SIDE */}
-        <div className="campus-form-side">
-          <div className="campus-brand">CampusConnect</div>
-          
-          <div className="campus-content-box">
-            <h2 className="campus-welcome">Create Account</h2>
-            <p className="campus-subtitle">Join the official KRMU Campus Connect ecosystem</p>
+    <div className="auth-zone-wrapper">
+      {/* THICK CORNER GLOWS - These will now show up */}
+      <div className="corner-glow top-left"></div>
+      <div className="corner-glow top-right"></div>
+      <div className="corner-glow bottom-left"></div>
+      <div className="corner-glow bottom-right"></div>
 
-            {message && <div className="alert alert-success py-2 mb-3 small">{message}</div>}
-            {error && <div className="campus-error-alert">{error}</div>}
+      {/* TOP-LEFT BRANDING */}
+      <header className="az-header-top-left">
+        <div className="az-logo-container">
+          <div className="az-logo-icon">K</div>
+          <div className="az-logo-pulse"></div>
+        </div>
+        <div className="az-brand-text">
+          <h1>K.R. MANGALAM <span>UNIVERSITY</span></h1>
+          <p>Campus Connect Portal</p>
+        </div>
+      </header>
 
-            <form onSubmit={handleSubmit} className="campus-main-form">
-              <div className="campus-input-field">
-                <label>Full Name</label>
-                <input 
-                  type="text" 
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required 
-                />
+      <main className="auth-zone-main">
+        <div className="az-card-wrapper">
+          <div className="az-card">
+            
+            {/* THE FIXED ROLE SWITCHER (Dynamic Columns) */}
+            <div className="az-role-switcher register-switch">
+              <button 
+                type="button"
+                className={userRole === "student" ? "az-role-btn active" : "az-role-btn"} 
+                onClick={() => setUserRole("student")}
+              >
+                Student
+              </button>
+              <button 
+                type="button"
+                className={userRole === "admin" ? "az-role-btn active" : "az-role-btn"} 
+                onClick={() => setUserRole("admin")}
+              >
+                Admin
+              </button>
+            </div>
+
+            <div className="az-intro">
+              <h2>Join Us</h2>
+              <p>Create your <span className="text-orange">{userRole}</span> profile</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="az-form">
+              <div className="az-input-group">
+                <i className="bi bi-person-fill"></i>
+                <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required />
               </div>
 
-              <div className="campus-input-field">
-                <label>University Email</label>
-                <input 
-                  type="email" 
-                  placeholder="university.email@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required 
-                />
+              <div className="az-input-group">
+                <i className="bi bi-envelope-at-fill"></i>
+                <input type="email" placeholder="University Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
 
-              <div className="campus-input-field">
-                <label>Password</label>
-                <div className="campus-password-wrapper">
-                  <input 
-                    type="password" 
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required 
-                  />
-                  <i className="bi bi-shield-lock campus-eye-icon"></i>
-                </div>
+              <div className="az-input-group">
+                <i className="bi bi-lock-fill"></i>
+                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
               </div>
 
-              <button type="submit" className="campus-submit-btn">Create Account</button>
+              <button type="submit" className="az-btn-primary">
+                Create Account <i className="bi bi-arrow-right-short"></i>
+              </button>
             </form>
 
-            <div className="campus-or-divider"><span>Or Register with</span></div>
-
-            <div className="campus-social-group">
-              <button className="campus-social-item">
-                <i className="bi bi-google"></i> Google
-              </button>
-              <button className="campus-social-item">
-                <i className="bi bi-apple"></i> Apple
-              </button>
-            </div>
-
-            <div className="campus-form-footer">
-              <Link to="/" className="register-link">Already have an account? <span>Sign in</span></Link>
-              <Link to="/" className="back-link">← Back to home</Link>
+            <div className="az-signup-prompt">
+              <p>Already a member? <Link to="/" className="az-signup-btn">Sign In</Link></p>
             </div>
           </div>
-        </div>
 
-        {/* RIGHT SECTION: IMAGE PANE (Matching Login) */}
-        <div className="campus-visual-side">
-          <div 
-            className="campus-image-inset"
-            style={{ 
-              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)), url(${krmuImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }}
-          >
-             <div className="campus-overlay-text">
-                <h3>Join the Network,</h3>
-                <h3 className="fw-bold">Build Your Future.</h3>
-                <p>Create an account to access placement opportunities and campus updates.</p>
-             </div>
-          </div>
+         
         </div>
-
-      </div>
+      </main>
     </div>
   );
 };

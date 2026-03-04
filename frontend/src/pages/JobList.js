@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { getAllJobs } from "../api/PlacementApi";
-import "./JobList.css"; // Dedicated styles
+import "./JobList.css";
 
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
@@ -22,52 +22,68 @@ const JobList = () => {
   }, []);
 
   return (
-    <div className="jobs-wrapper">
+    <div className="az-wrapper">
+      {/* Background Blobs scoped to Auth/Placement views */}
+      <div className="az-blobs">
+        <div className="az-blob az-blob-1"></div>
+        <div className="az-blob az-blob-2"></div>
+      </div>
+      
       <Navbar />
       
-      <div className="container py-5">
-        <header className="jobs-header mb-5">
-          <span className="badge-system mb-2">CAREER GATEWAY</span>
-          <h2 className="display-6 fw-bold text-white">Placement Opportunities</h2>
-          <p className="text-silver">Handpicked job listings for KRMU students.</p>
+      <div className="container az-content">
+        <header className="az-page-header mb-5">
+          <div className="az-brand-mini">
+            <div className="az-logo-small">K</div>
+            <div className="az-titles-stack">
+              <span className="az-badge-tag">CAREER GATEWAY</span>
+              <h2>Placement Opportunities</h2>
+              <p>Handpicked job listings for KRMU students.</p>
+            </div>
+          </div>
         </header>
 
         {loading ? (
-          <div className="text-center py-5">
-            <div className="spinner-border text-indigo-glow"></div>
+          <div className="az-loader-container">
+            <div className="az-spinner"></div>
           </div>
         ) : jobs.length === 0 ? (
-          <div className="empty-jobs text-center p-5 card-slate">
-            <i className="bi bi-briefcase display-1 text-dark-subtle mb-3"></i>
-            <p className="text-silver">No active job listings at the moment.</p>
+          <div className="az-card az-empty-state">
+            <i className="bi bi-briefcase"></i>
+            <p>No active job listings at the moment.</p>
           </div>
         ) : (
           <div className="row g-4">
-            {jobs.map((job) => (
+            {jobs.map((job, index) => (
               <div key={job._id} className="col-md-6 col-xl-4">
-                <div className="job-card shadow-sm">
-                  <div className="job-card-header d-flex justify-content-between align-items-start mb-3">
-                    <div className="company-logo-placeholder">
+                <div 
+                  className="az-card az-job-card" 
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="az-card-top">
+                    <div className="az-company-avatar">
                       {job.companyName.charAt(0)}
                     </div>
-                    <span className="dept-tag">{job.department}</span>
+                    <span className="az-dept-badge">{job.department}</span>
                   </div>
 
-                  <h4 className="text-white fw-bold mb-1">{job.companyName}</h4>
-                  <p className="text-indigo-glow fw-semibold mb-4">{job.role}</p>
+                  <div className="az-job-body">
+                    <h4 className="az-company-title">{job.companyName}</h4>
+                    <p className="az-role-subtitle">{job.role}</p>
+                  </div>
 
-                  <div className="eligibility-grid">
-                    <div className="eligibility-item">
-                      <span className="label">Min Marks</span>
-                      <span className="value">{job.minMarks}%</span>
+                  <div className="az-eligibility-grid">
+                    <div className="az-stat-item">
+                      <span className="az-stat-label">MIN SCORE</span>
+                      <span className="az-stat-value">{job.minMarks}%</span>
                     </div>
-                    <div className="eligibility-item">
-                      <span className="label">Backlogs</span>
-                      <span className="value text-warning">{job.maxBacklogs} Max</span>
+                    <div className="az-stat-item">
+                      <span className="az-stat-label">BACKLOGS</span>
+                      <span className="az-stat-value">{job.maxBacklogs} MAX</span>
                     </div>
                   </div>
 
-                  <button className="btn btn-apply-now w-100 mt-4">
+                  <button className="az-btn-primary az-full-width">
                     View Details & Apply
                   </button>
                 </div>

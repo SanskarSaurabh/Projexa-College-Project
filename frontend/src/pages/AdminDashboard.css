@@ -1,113 +1,109 @@
-:root {
-    --bg-admin: #050506;
-    --card-slate: #1c1b29;
-    --indigo-glow: #6358dc;
-    --emerald-btn: #10b981;
-    --rose-btn: #ef4444;
-    --silver-text: #94a3b8;
-  }
-  
-  .admin-wrapper {
-    min-height: 100vh;
-    background-color: var(--bg-admin);
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-  }
-  
-  /* 💊 NAVIGATION PILLS */
-  .admin-nav-pills {
-    display: flex;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px;
-    border-radius: 12px;
-  }
-  
-  .nav-pill {
-    padding: 8px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--silver-text);
-    font-size: 0.9rem;
-    transition: 0.3s;
-  }
-  
-  .nav-pill.active, .nav-pill:hover {
-    background: var(--indigo-glow);
-    color: #fff;
-  }
-  
-  /* 🏢 ADMIN CARD & TABLE */
-  .admin-card {
-    background: var(--card-slate);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  }
-  
-  .custom-admin-table {
-    border-collapse: separate;
-    border-spacing: 0 10px;
-  }
-  
-  .custom-admin-table thead th {
-    border: none;
-    color: var(--silver-text);
-    font-weight: 500;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  .custom-admin-table tbody tr {
-    background: rgba(255, 255, 255, 0.02);
-    transition: 0.2s;
-  }
-  
-  .custom-admin-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.05);
-  }
-  
-  .custom-admin-table td {
-    padding: 16px;
-    border: none;
-  }
-  
-  /* 🏷️ ROLE TAGS */
-  .role-tag {
-    padding: 4px 12px;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-  
-  .role-tag.admin { background: rgba(99, 88, 220, 0.2); color: var(--indigo-glow); }
-  .role-tag.placement { background: rgba(16, 185, 129, 0.2); color: var(--emerald-btn); }
-  .role-tag.student { background: rgba(148, 163, 184, 0.2); color: #fff; }
-  
-  /* ✅ ACTIONS */
-  .btn-approve, .btn-reject {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    border: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s;
-  }
-  
-  .btn-approve { background: rgba(16, 185, 129, 0.1); color: var(--emerald-btn); }
-  .btn-approve:hover { background: var(--emerald-btn); color: #fff; }
-  
-  .btn-reject { background: rgba(239, 68, 68, 0.1); color: var(--rose-btn); }
-  .btn-reject:hover { background: var(--rose-btn); color: #fff; }
-  
-  .badge-system {
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 2px;
-    color: var(--indigo-glow);
-    display: block;
-  }
+.admin-page-bg {
+  background-color: #FAF9F6;
+  min-height: 100vh;
+  padding: 100px 5% 40px;
+}
+
+.admin-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.admin-title-section h1 { font-weight: 800; color: #1A1C1E; font-size: 1.8rem; }
+
+/* 💊 SHARED SWITCHER LOGIC (Keep this in both files) */
+.role-switcher {
+  background: #EFEBE3;
+  padding: 6px;
+  border-radius: 18px;
+  display: flex;
+  gap: 5px;
+  width: 320px;
+}
+
+.role-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #888 !important;
+  text-decoration: none !important;
+  display: flex;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.role-btn.active {
+  background: white !important;
+  color: #FF7A00 !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* 🏢 TABLE STYLING */
+.admin-table-card {
+  background: white;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  overflow: hidden;
+}
+
+.user-verification-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-verification-table th {
+  background: #FDFDFD;
+  padding: 20px;
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #999;
+  border-bottom: 1px solid #EEE;
+}
+
+.user-verification-table td { padding: 20px; border-bottom: 1px solid #F9F9F9; }
+
+.role-tag {
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.role-tag.student { background: #E3F2FD; color: #1976D2; }
+
+.action-btns-group { display: flex; justify-content: center; gap: 10px; }
+
+.btn-circle-check, .btn-circle-x {
+  width: 38px; height: 38px; border-radius: 12px; border: none; cursor: pointer; transition: 0.2s;
+}
+.btn-circle-check { background: #E8F5E9; color: #2E7D32; }
+.btn-circle-check:hover { background: #2E7D32; color: white; }
+
+.btn-circle-x { background: #FFEBEE; color: #D32F2F; }
+.btn-circle-x:hover { background: #D32F2F; color: white; }
+
+.admin-post-box{
+  background:white;
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.03);
+  margin-bottom:25px;
+}
+
+.admin-post-box h2{
+  font-weight:800;
+  margin-bottom:5px;
+}
+
+.admin-post-box p{
+  color:#888;
+  font-size:0.85rem;
+  margin-bottom:15px;
+}

@@ -8,19 +8,24 @@ export const initSocket = (server) => {
         "https://projexa-college-project-ojmv.vercel.app",
         "https://projexa-college-project-ojmv-git-main-sanskarsaurabhs-projects.vercel.app",
         "https://projexa-college-project-ojmv-cgvgmf9vj-sanskarsaurabhs-projects.vercel.app",
-        "http://localhost:3000"
+        "http://localhost:3000",
       ],
       methods: ["GET", "POST"],
-      credentials: true
+      credentials: true,
     },
   });
 
   io.on("connection", (socket) => {
+    console.log("User connected:", socket.id);
+
+    /* ================= JOIN USER ROOM ================= */
     socket.on("join", (userId) => {
+      socket.leaveAll(); // Prevent duplicate joins
       socket.join(userId);
       console.log(`User ${userId} joined their personal room`);
     });
 
+    /* ================= SEND MESSAGE ================= */
     socket.on("sendMessage", async (data) => {
       try {
         const { sender, receiver, text } = data;
@@ -31,17 +36,18 @@ export const initSocket = (server) => {
           text,
         });
 
-        // 1. Send to the receiver
+        // Send to receiver's room
         io.to(receiver).emit("receiveMessage", message);
-        
-        // 2. Send back to the sender (this confirms the message was saved)
-        io.to(sender).emit("receiveMessage", message);
+
+        // Send confirmation ONLY to current sender socket
+        socket.emit("receiveMessage", message);
 
       } catch (error) {
         console.error("Socket Message Error:", error);
       }
     });
 
+    /* ================= DISCONNECT ================= */
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
     });

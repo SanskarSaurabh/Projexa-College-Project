@@ -1,107 +1,147 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getPendingPosts, approvePost, rejectPost } from "../api/PostApi";
 import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
-import "./AdminPostApproval.css"; // Reusing the high-fidelity Admin styles
+import toast from "react-hot-toast";
+import "./AdminPostApproval.css";
 
 const AdminPostApproval = () => {
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchPendingPosts = async () => {
+  const fetchPosts = async () => {
     try {
       const res = await getPendingPosts();
       setPosts(res.data.posts);
-    } catch (error) {
-      console.error("Error fetching posts");
+    } catch (err) {
+      toast.error("Error loading posts");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPendingPosts();
+    fetchPosts();
   }, []);
 
-  const handleApprove = async (id) => {
-    await approvePost(id);
-    fetchPendingPosts();
-  };
+  const handleModeration = async (id, approved) => {
 
-  const handleReject = async (id) => {
-    await rejectPost(id);
-    fetchPendingPosts();
-  };
+    const tId = toast.loading(approved ? "Approving..." : "Rejecting...");
 
-  if (loading) return (
-    <div className="admin-loader">
-      <div className="spinner-border text-indigo" role="status"></div>
-    </div>
-  );
+    try {
+
+      approved
+        ? await approvePost(id)
+        : await rejectPost(id);
+
+      setPosts(prev => prev.filter(p => p._id !== id));
+
+      toast.success(
+        approved ? "Post Live!" : "Post Removed",
+        { id: tId }
+      );
+
+    } catch (err) {
+
+      toast.error("Failed", { id: tId });
+
+    }
+
+  };
 
   return (
-    <div className="admin-wrapper">
+    <div className="moderation-page-bg">
+
       <Navbar />
 
-      <div className="container py-5">
-        <div className="admin-header d-flex justify-content-between align-items-end mb-5">
-          <div>
-            <span className="badge-system mb-2">CONTENT MODERATION</span>
-            <h2 className="display-6 fw-bold text-white">Post Approvals</h2>
+      <main className="moderation-container">
+
+        <div className="moderation-header">
+
+          <h1>Campus Moderation</h1>
+
+          <div className="role-switcher">
+
+            <Link to="/admin" className="role-btn">
+              Verify Users
+            </Link>
+
+            <Link to="/admin/announcement" className="role-btn">
+              Campus Announcement
+            </Link>
+
+            <button className="role-btn active">
+              Verify Posts
+            </button>
+
           </div>
-          
-          <nav className="admin-nav-pills">
-            <Link to="/admin" className="nav-pill">Verify Users</Link>
-            <Link to="/admin/posts" className="nav-pill active">Verify Posts</Link>
-          </nav>
+
         </div>
 
-        {posts.length === 0 ? (
-          <div className="admin-card p-5 text-center">
-            <div className="empty-state">
-              <i className="bi bi-chat-square-check display-1 text-indigo-glow mb-3"></i>
-              <p className="text-silver fs-5">All caught up! No posts pending review.</p>
-            </div>
-          </div>
+        {loading ? (
+          <p className="loading-text">Loading posts...</p>
+        ) : posts.length === 0 ? (
+          <p className="no-posts-msg">
+            No posts waiting for approval.
+          </p>
         ) : (
-          <div className="row g-4">
-            {posts.map((post) => (
-              <div key={post._id} className="col-md-6 col-xl-4">
-                <div className="post-approval-card">
-                  <div className="post-card-header d-flex align-items-center mb-3">
-                    <div className="author-avatar-sm me-2">
-                      {post.author.name.charAt(0)}
-                    </div>
-                    <div>
-                      <h6 className="text-white m-0 small">{post.author.name}</h6>
-                      <span className="text-silver smaller">Author</span>
-                    </div>
-                  </div>
-                  
-                  <div className="post-body mb-4">
-                    <p className="text-silver-muted">{post.text}</p>
+          <div className="posts-grid">
+
+            {posts.map(post => (
+
+              <div key={post._id} className="post-mod-card">
+
+                <div className="post-author">
+
+                  <div className="author-initial">
+                    {post.author?.name?.charAt(0)}
                   </div>
 
-                  <div className="post-actions d-flex gap-2">
-                    <button 
-                      className="btn-approve-lg flex-grow-1" 
-                      onClick={() => handleApprove(post._id)}
-                    >
-                      <i className="bi bi-check2 me-2"></i> Approve
-                    </button>
-                    <button 
-                      className="btn-reject-lg" 
-                      onClick={() => handleReject(post._id)}
-                    >
-                      <i className="bi bi-trash3"></i>
-                    </button>
+                  <div className="author-meta">
+                    <strong>{post.author?.name}</strong>
+                    <span>{post.author?.role}</span>
                   </div>
+
                 </div>
+
+                <p className="post-body">
+                  {post.text}
+                </p>
+
+                {post.media?.url && (
+                  <div className="post-media-box">
+                    <img src={post.media.url} alt="Post content" />
+                  </div>
+                )}
+
+                <div className="mod-actions">
+
+                  <button
+                    className="btn-approve-full"
+                    onClick={() => handleModeration(post._id, true)}
+                  >
+                    Approve
+                  </button>
+
+                  <button
+                    className="btn-reject-outline"
+                    onClick={() => handleModeration(post._id, false)}
+                  >
+                    Reject
+                  </button>
+
+                </div>
+
               </div>
+
             ))}
+
           </div>
         )}
-      </div>
+
+      </main>
+
     </div>
   );
 };

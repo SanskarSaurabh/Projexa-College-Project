@@ -2,7 +2,11 @@ import { useContext, useEffect, useState, useRef } from "react";
 import Navbar from "../components/Navbar";
 import socket from "../socket";
 import { AuthContext } from "../context/AuthContext";
-import { getChatHistory, getChatUsers } from "../api/ChatApi";
+import {
+  getChatHistory,
+  getChatUsers,
+  deleteChatHistory,
+} from "../api/ChatApi";
 import "./Chat.css";
 
 const Chat = () => {
@@ -11,6 +15,7 @@ const Chat = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
+  const [unreadCounts, setUnreadCounts] = useState({});
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -21,150 +26,257 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Fetch all users on mount
+  /* ================= FETCH USERS ================= */
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const res = await getChatUsers();
         setUsers(res.data.users);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error(error);
       }
     };
     fetchUsers();
   }, []);
 
-  // Join personal room when user is available
+  /* ================= JOIN ROOM ================= */
   useEffect(() => {
     if (user?._id) {
       socket.emit("join", user._id);
     }
   }, [user]);
 
-  // Listen for incoming messages
+  /* ================= RECEIVE MESSAGE ================= */
   useEffect(() => {
     const handleMessage = (msg) => {
-      // Only add message if it's part of the current conversation
-      const isFromSelected = msg.sender === selectedUser?._id;
-      const isFromMe = msg.sender === user?._id;
+      const isCurrentChat =
+        (msg.sender?.toString() === selectedUser?._id?.toString() &&
+          msg.receiver?.toString() === user?._id?.toString()) ||
+        (msg.sender?.toString() === user?._id?.toString() &&
+          msg.receiver?.toString() === selectedUser?._id?.toString());
 
-      if (isFromSelected || isFromMe) {
+      if (isCurrentChat) {
         setMessages((prev) => {
-          // Prevent duplicates by checking ID (if DB returns it)
-          if (prev.find((m) => m._id === msg._id && msg._id)) return prev;
+          const alreadyExists = prev.some((m) => m._id === msg._id);
+          if (alreadyExists) return prev;
           return [...prev, msg];
         });
+      } else {
+        setUnreadCounts((prev) => ({
+          ...prev,
+          [msg.sender]: (prev[msg.sender] || 0) + 1,
+        }));
       }
     };
 
     socket.on("receiveMessage", handleMessage);
-
-    // CLEANUP: Important to prevent duplicate messages
-    return () => {
-      socket.off("receiveMessage", handleMessage);
-    };
+    return () => socket.off("receiveMessage", handleMessage);
   }, [selectedUser, user]);
 
+  /* ================= OPEN CHAT ================= */
   const openChat = async (u) => {
     setSelectedUser(u);
+
+    setUnreadCounts((prev) => ({
+      ...prev,
+      [u._id]: 0,
+    }));
+
     try {
       const res = await getChatHistory(u._id);
       setMessages(res.data.messages);
     } catch (error) {
-      console.error("Error loading history:", error);
+      console.error(error);
     }
   };
 
+  /* ================= SEND MESSAGE ================= */
   const sendMessage = () => {
     if (!text.trim() || !selectedUser) return;
 
-    const messageData = {
+    socket.emit("sendMessage", {
       sender: user._id,
       receiver: selectedUser._id,
       text: text.trim(),
-    };
+    });
 
-    // Emit to server
-    socket.emit("sendMessage", messageData);
-
-    // NOTE: We no longer setMessages here manually. 
-    // The socket listener above will handle it when the server broadcasts it back.
     setText("");
   };
 
+  /* ================= DELETE CHAT ================= */
+  const handleDeleteChat = async () => {
+    if (!selectedUser) return;
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this chat history?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteChatHistory(selectedUser._id);
+      setMessages([]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /* ================= FORMAT DATE & TIME ================= */
+  const formatDateTime = (dateString) => {
+    const dateObj = new Date(dateString);
+
+    const formattedTime = dateObj.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const formattedDate = dateObj.toLocaleDateString();
+
+    return `${formattedDate} • ${formattedTime}`;
+  };
+
   return (
-    <div className="chat-wrapper">
+    <div className="campus-view-root">
       <Navbar />
-      <div className="container py-4 chat-main-container">
-        <div className="row g-0 chat-glass-card shadow-lg">
-          
-          {/* Sidebar */}
-          <div className="col-md-4 chat-sidebar border-end border-dark">
-            <div className="p-4 border-bottom border-dark">
-              <h5 className="m-0 fw-bold text-white">Messages</h5>
-            </div>
-            <div className="user-list overflow-auto">
-              {users.map((u) => (
-                <div
-                  key={u._id}
-                  className={`user-item d-flex align-items-center p-3 ${selectedUser?._id === u._id ? "active-user" : ""}`}
-                  onClick={() => openChat(u)}
-                >
-                  <div className="avatar-chat me-3">{u.name.charAt(0)}</div>
-                  <div className="user-meta">
-                    <p className="m-0 text-white fw-semibold small">{u.name}</p>
-                    <span className="smaller text-silver-muted">{u.role}</span>
+
+      <main className="chat-interface-wrapper">
+        <div className="chat-glass-panel">
+          <div className="row g-0 h-100">
+
+            {/* Sidebar */}
+            <div className="col-md-4 chat-sidebar border-end">
+              <div className="sidebar-brand-box">
+                <h5>Messages</h5>
+                <span className="online-tag">Campus Live</span>
+              </div>
+
+              <div className="user-scroller">
+                {users.map((u) => (
+                  <div
+                    key={u._id}
+                    className={`user-pill ${
+                      selectedUser?._id === u._id ? "pill-active" : ""
+                    }`}
+                    onClick={() => openChat(u)}
+                  >
+                    <div className="avatar-box">
+                      {u.name.charAt(0)}
+                    </div>
+
+                    <div className="user-info-text">
+                      <p className="m-0 fw-bold">{u.name}</p>
+                      <small>{u.role}</small>
+                    </div>
+
+                    {unreadCounts[u._id] > 0 && (
+                      <div className="unread-badge">
+                        +{unreadCounts[u._id]}
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Chat Window */}
-          <div className="col-md-8 d-flex flex-column chat-window">
-            {selectedUser ? (
-              <>
-                <div className="chat-header p-3 border-bottom border-dark d-flex align-items-center">
-                  <div className="avatar-chat sm me-2">{selectedUser.name.charAt(0)}</div>
-                  <h6 className="m-0 text-white">{selectedUser.name}</h6>
-                </div>
-
-                <div className="messages-area p-4 overflow-auto flex-grow-1">
-                  {messages.map((m, i) => (
-                    <div key={i} className={`message-bubble-wrapper d-flex ${m.sender === user._id ? "justify-content-end" : "justify-content-start"}`}>
-                      <div className={`message-bubble ${m.sender === user._id ? "bg-indigo-msg" : "bg-slate-msg"}`}>
-                        {m.text}
+            {/* Chat View */}
+            <div className="col-md-8 d-flex flex-column chat-viewport">
+              {selectedUser ? (
+                <>
+                  <div className="viewport-header d-flex justify-content-between align-items-center">
+                    <div className="d-flex align-items-center">
+                      <div className="avatar-sm">
+                        {selectedUser.name.charAt(0)}
+                      </div>
+                      <div>
+                        <h6 className="m-0 fw-bold">
+                          {selectedUser.name}
+                        </h6>
+                        <small className="active-dot">
+                          Connected
+                        </small>
                       </div>
                     </div>
-                  ))}
-                  <div ref={messagesEndRef} />
-                </div>
 
-                <div className="chat-input-area p-3 border-top border-dark">
-                  <div className="input-group">
-                    <input
-                      type="text"
-                      className="form-control chat-input-field"
-                      value={text}
-                      onChange={(e) => setText(e.target.value)}
-                      onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-                      placeholder="Type a message..."
-                    />
-                    <button className="btn btn-indigo-send" onClick={sendMessage}>
-                      <i className="bi bi-send-fill"></i>
+                    <button
+                      onClick={handleDeleteChat}
+                      className="btn btn-sm btn-outline-danger"
+                    >
+                      Delete Chat
                     </button>
                   </div>
+
+                  {/* ================= MESSAGES ================= */}
+                  <div className="messages-flow">
+                    {messages.map((m) => {
+                      const isMe =
+                        m.sender?.toString() ===
+                        user._id?.toString();
+
+                      return (
+                        <div
+                          key={m._id}
+                          className={`msg-wrapper ${
+                            isMe ? "msg-me" : "msg-them"
+                          }`}
+                        >
+                          <div>
+                            <div className="msg-bubble">
+                              {m.text}
+                            </div>
+
+                            <div
+                              style={{
+                                fontSize: "11px",
+                                marginTop: "4px",
+                                color: "#94a3b8",
+                                textAlign: isMe
+                                  ? "right"
+                                  : "left",
+                              }}
+                            >
+                              {formatDateTime(m.createdAt)}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <div ref={messagesEndRef} />
+                  </div>
+
+                  {/* ================= INPUT ================= */}
+                  <div className="viewport-footer">
+                    <div className="input-pill">
+                      <input
+                        value={text}
+                        onChange={(e) =>
+                          setText(e.target.value)
+                        }
+                        onKeyPress={(e) =>
+                          e.key === "Enter" && sendMessage()
+                        }
+                        placeholder="Write a message..."
+                      />
+
+                      <button
+                        onClick={sendMessage}
+                        className="send-btn"
+                      >
+                        Send
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="chat-empty-state">
+                  <div className="empty-icon">K</div>
+                  <p>Select a peer to start chatting</p>
                 </div>
-              </>
-            ) : (
-              <div className="d-flex flex-column align-items-center justify-content-center h-100 empty-chat">
-                <i className="bi bi-chat-dots display-1 text-dark-subtle mb-3"></i>
-                <p className="text-silver-muted">Select a peer to start collaborating</p>
-              </div>
-            )}
+              )}
+            </div>
+
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

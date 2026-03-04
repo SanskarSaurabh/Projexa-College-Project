@@ -1,71 +1,101 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { createPost } from "../api/PostApi";
-import "../pages/Feed.css"; // We'll add specific styles to Feed.css
+import toast from "react-hot-toast"; // ✅ Using Hot Toast
 
 const CreatePost = ({ onPostCreated }) => {
   const [text, setText] = useState("");
-  const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [file, setFile] = useState(null);
+  const [uploadType, setUploadType] = useState("image");
+  const [isUploading, setIsUploading] = useState(false);
+
+  const mimeTypes = {
+    image: "image/*",
+    video: "video/*,video/quicktime",
+    raw: ".pdf,.doc,.docx,.txt"
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (selectedFile.size > 50 * 1024 * 1024) {
+        toast.error("File exceeds 50MB limit!"); // ✅ Hot Toast Error
+        e.target.value = null;
+        return;
+      }
+      setFile(selectedFile);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!text.trim()) return;
+    if (!text.trim() && !file) {
+      return toast("Please add text or a file!", { icon: '⚠️' }); // ✅ Hot Toast Warning
+    }
 
-    setIsSubmitting(true);
+    const loadingToast = toast.loading("Uploading to Cloudinary..."); // ✅ Start Loading Toast
+    setIsUploading(true);
+
+    const formData = new FormData();
+    formData.append("text", text);
+    if (file) formData.append("file", file);
+
     try {
-      const res = await createPost({ text });
-      setMessage("Post sent for approval!");
+      await createPost(formData);
+      
+      toast.success("Post submitted for approval!", { id: loadingToast }); // ✅ Replace loading with success
+      
       setText("");
-      if (onPostCreated) onPostCreated(); // Refresh the feed
-      setTimeout(() => setMessage(""), 3000);
+      setFile(null);
+      if (onPostCreated) onPostCreated();
     } catch (error) {
-      setMessage("Error creating post");
+      console.error(error);
+      toast.error("Upload failed. Try again.", { id: loadingToast }); // ✅ Replace loading with error
     } finally {
-      setIsSubmitting(false);
+      setIsUploading(false);
     }
   };
 
   return (
-    <div className="create-post-card p-4 mb-4">
-      <div className="d-flex align-items-center mb-3">
-        <div className="avatar-sm me-2">
-          <i className="bi bi-pencil-fill"></i>
-        </div>
-        <h5 className="text-white m-0">Share an Update</h5>
-      </div>
-
-      {message && (
-        <div className={`alert-custom-mini mb-3 ${message.includes("Error") ? "error" : "success"}`}>
-          {message}
-        </div>
-      )}
-
+    <div className="create-post-card p-4 bg-dark-card border border-secondary rounded shadow">
+      <h5 className="text-white mb-3">Create a Post</h5>
       <form onSubmit={handleSubmit}>
-        <div className="textarea-wrapper mb-3">
-          <textarea
-            className="form-control post-input"
-            rows="3"
-            placeholder="Announce a placement, ask a question, or share news..."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
+        <textarea
+          className="form-control bg-dark text-white border-secondary mb-3"
+          rows="3"
+          placeholder="What's happening?"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+
+        <div className="row g-2 align-items-center mb-3">
+          <div className="col-auto">
+            <select
+              className="form-select bg-dark text-white border-secondary"
+              value={uploadType}
+              onChange={(e) => { setUploadType(e.target.value); setFile(null); }}
+            >
+              <option value="image">📷 Photo</option>
+              <option value="video">🎥 Video</option>
+              <option value="raw">📄 Document</option>
+            </select>
+          </div>
+          <div className="col">
+            <input
+              type="file"
+              className="form-control bg-dark text-white border-secondary"
+              accept={mimeTypes[uploadType]}
+              onChange={handleFileChange}
+            />
+          </div>
         </div>
 
-        <div className="d-flex justify-content-between align-items-center">
-          <div className="post-options d-flex gap-3">
-            <button type="button" className="btn-icon-option"><i className="bi bi-image"></i></button>
-            <button type="button" className="btn-icon-option"><i className="bi bi-paperclip"></i></button>
-            <button type="button" className="btn-icon-option"><i className="bi bi-hash"></i></button>
-          </div>
-          
-          <button 
-            type="submit" 
-            className="btn btn-submit-indigo px-4 py-2"
-            disabled={isSubmitting || !text.trim()}
-          >
-            {isSubmitting ? "Posting..." : "Post to Feed"}
-          </button>
-        </div>
+        <button
+          type="submit"
+          disabled={isUploading}
+          className="btn btn-indigo w-100 fw-bold"
+        >
+          {isUploading ? "Uploading..." : "Post Update"}
+        </button>
       </form>
     </div>
   );
