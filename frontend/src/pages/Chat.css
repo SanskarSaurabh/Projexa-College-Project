@@ -1,7 +1,7 @@
 /* --- Global Overrides --- */
 .campus-view-root {
   min-height: 100vh;
-  background: linear-gradient(135deg,#fff7f0,#fffdf9);
+  background: linear-gradient(135deg,#8D989E,#57C785);
   overflow: hidden;
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
