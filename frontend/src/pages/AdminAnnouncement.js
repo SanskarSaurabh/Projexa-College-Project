@@ -3,6 +3,7 @@ import CreatePost from "../components/CreatePost";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import "./AdminDashboard.css";
+import "./AdminAnnouncement.css";
 
 const AdminAnnouncement = () => {
 

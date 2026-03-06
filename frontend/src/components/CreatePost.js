@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createPost } from "../api/PostApi";
-import toast from "react-hot-toast"; // ✅ Using Hot Toast
+import toast from "react-hot-toast";
 
 const CreatePost = ({ onPostCreated }) => {
   const [text, setText] = useState("");
@@ -16,40 +16,46 @@ const CreatePost = ({ onPostCreated }) => {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
+
     if (selectedFile) {
       if (selectedFile.size > 50 * 1024 * 1024) {
-        toast.error("File exceeds 50MB limit!"); // ✅ Hot Toast Error
+        toast.error("File exceeds 50MB limit!");
         e.target.value = null;
         return;
       }
+
       setFile(selectedFile);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!text.trim() && !file) {
-      return toast("Please add text or a file!", { icon: '⚠️' }); // ✅ Hot Toast Warning
+      return toast("Please add text or a file!", { icon: "⚠️" });
     }
 
-    const loadingToast = toast.loading("Uploading to Cloudinary..."); // ✅ Start Loading Toast
+    const loadingToast = toast.loading("Uploading to Cloudinary...");
     setIsUploading(true);
 
     const formData = new FormData();
     formData.append("text", text);
+
     if (file) formData.append("file", file);
 
     try {
       await createPost(formData);
-      
-      toast.success("Post submitted for approval!", { id: loadingToast }); // ✅ Replace loading with success
-      
+
+      toast.success("Post submitted for approval!", { id: loadingToast });
+
       setText("");
       setFile(null);
+
       if (onPostCreated) onPostCreated();
+
     } catch (error) {
       console.error(error);
-      toast.error("Upload failed. Try again.", { id: loadingToast }); // ✅ Replace loading with error
+      toast.error("Upload failed. Try again.", { id: loadingToast });
     } finally {
       setIsUploading(false);
     }
@@ -58,7 +64,9 @@ const CreatePost = ({ onPostCreated }) => {
   return (
     <div className="create-post-card p-4 bg-dark-card border border-secondary rounded shadow">
       <h5 className="text-white mb-3">Create a Post</h5>
+
       <form onSubmit={handleSubmit}>
+
         <textarea
           className="form-control bg-dark text-white border-secondary mb-3"
           rows="3"
@@ -68,17 +76,26 @@ const CreatePost = ({ onPostCreated }) => {
         />
 
         <div className="row g-2 align-items-center mb-3">
-          <div className="col-auto">
+
+          {/* Dropdown wrapper added ONLY for arrow fix */}
+
+          <div className="col-auto dropdown-wrapper">
+
             <select
               className="form-select bg-dark text-white border-secondary"
               value={uploadType}
-              onChange={(e) => { setUploadType(e.target.value); setFile(null); }}
+              onChange={(e) => {
+                setUploadType(e.target.value);
+                setFile(null);
+              }}
             >
               <option value="image">📷 Photo</option>
               <option value="video">🎥 Video</option>
               <option value="raw">📄 Document</option>
             </select>
+
           </div>
+
           <div className="col">
             <input
               type="file"
@@ -87,6 +104,7 @@ const CreatePost = ({ onPostCreated }) => {
               onChange={handleFileChange}
             />
           </div>
+
         </div>
 
         <button
@@ -96,6 +114,7 @@ const CreatePost = ({ onPostCreated }) => {
         >
           {isUploading ? "Uploading..." : "Post Update"}
         </button>
+
       </form>
     </div>
   );

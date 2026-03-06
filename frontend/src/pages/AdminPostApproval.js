@@ -109,9 +109,35 @@ const AdminPostApproval = () => {
                   {post.text}
                 </p>
 
+                {/* MEDIA DISPLAY FIX */}
+
                 {post.media?.url && (
                   <div className="post-media-box">
-                    <img src={post.media.url} alt="Post content" />
+
+                    {post.media.resource_type === "video" ? (
+
+                      <video
+                        src={post.media.url}
+                        controls
+                        style={{
+                          width: "100%",
+                          borderRadius: "12px"
+                        }}
+                      />
+
+                    ) : (
+
+                      <img
+                        src={post.media.url}
+                        alt="Post content"
+                        style={{
+                          width: "100%",
+                          borderRadius: "12px"
+                        }}
+                      />
+
+                    )}
+
                   </div>
                 )}
 

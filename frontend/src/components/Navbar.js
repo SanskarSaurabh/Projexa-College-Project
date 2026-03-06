@@ -7,7 +7,9 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+
   const [isScrolled, setIsScrolled] = useState(false);
+  const [globalUnread, setGlobalUnread] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -15,12 +17,51 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  /* ================= FETCH GLOBAL UNREAD ================= */
+
+  useEffect(() => {
+
+    const fetchUnread = async () => {
+      try {
+
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/chat/unread`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+          }
+        );
+
+        const data = await res.json();
+
+        if (!data.unread) return;
+
+        const total = data.unread.reduce(
+          (sum, item) => sum + item.count,
+          0
+        );
+
+        setGlobalUnread(total);
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUnread();
+
+    const interval = setInterval(fetchUnread, 5000);
+
+    return () => clearInterval(interval);
+
+  }, []);
+
   const handleLogout = () => {
     logout();
     navigate("/");
   };
 
-  // Standardize role
   const userRole = user?.role?.toLowerCase();
 
   const getHomeRoute = () => {
@@ -29,7 +70,6 @@ const Navbar = () => {
     return "/dashboard";
   };
 
-  // Improved active route detection
   const isActive = (path) =>
     location.pathname.startsWith(path) ? "nav-item-active" : "";
 
@@ -50,7 +90,7 @@ const Navbar = () => {
         <div className="nav-links-wrapper">
           <ul className="nav-links-list">
 
-            {/* -------- ADMIN -------- */}
+            {/* ADMIN */}
             {userRole === "admin" && (
               <>
                 <li className={`nav-link-item ${isActive("/admin")}`}>
@@ -67,14 +107,14 @@ const Navbar = () => {
               </>
             )}
 
-            {/* -------- PLACEMENT -------- */}
+            {/* PLACEMENT */}
             {userRole === "placement" && (
               <li className={`nav-link-item ${isActive("/placements")}`}>
                 <Link to="/placements">Placement Hub</Link>
               </li>
             )}
 
-            {/* -------- STUDENT -------- */}
+            {/* STUDENT */}
             {userRole === "student" && (
               <>
                 <li className={`nav-link-item ${isActive("/dashboard")}`}>
@@ -90,7 +130,9 @@ const Navbar = () => {
                 </li>
 
                 <li className={`nav-link-item ${isActive("/chat")}`}>
-                  <Link to="/chat">Messages</Link>
+                  <Link to="/chat">
+                    Messages {globalUnread > 0 && `(+${globalUnread})`}
+                  </Link>
                 </li>
               </>
             )}

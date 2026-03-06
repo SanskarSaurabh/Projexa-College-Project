@@ -1,0 +1,158 @@
+/* ============================= */
+/* FORCE WHITE INPUT FOR ANNOUNCEMENT PAGE */
+/* ============================= */
+
+.admin-post-box textarea,
+.admin-post-box .form-control,
+.admin-post-box input[type="text"]{
+
+  background:#ffffff !important;
+  color:#111 !important;
+  border:1px solid #e5e7eb !important;
+
+}
+
+
+/* ============================= */
+/* TEXTAREA */
+/* ============================= */
+
+.admin-post-box textarea{
+  min-height:120px;
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  resize:none;
+  font-size:14px;
+  transition:0.2s;
+}
+
+.admin-post-box textarea:focus{
+  border:1px solid #FF7A00 !important;
+  box-shadow:0 0 0 3px rgba(255,122,0,0.08);
+  outline:none;
+}
+
+
+/* ============================= */
+/* FILE INPUT */
+/* ============================= */
+
+.admin-post-box input[type="file"]{
+  background:#ffffff !important;
+  border:1px solid #e5e7eb !important;
+  padding:8px;
+  border-radius:10px;
+  width:100%;
+  font-size:13px;
+}
+
+
+/* file selector button styling */
+
+.admin-post-box input[type="file"]::file-selector-button{
+  background:#FF7A00;
+  border:none;
+  color:white;
+  font-weight:600;
+  padding:6px 12px;
+  border-radius:8px;
+  margin-right:10px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.admin-post-box input[type="file"]::file-selector-button:hover{
+  background:#e46e00;
+}
+
+
+/* ============================= */
+/* DROPDOWN FIX */
+/* ============================= */
+
+.admin-post-box select{
+
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+
+  background:#111 !important;
+  border:1px solid #e5e7eb !important;
+
+  padding:10px 35px 10px 12px;
+  border-radius:10px;
+
+  font-size:14px;
+  cursor:pointer;
+
+  background-image:url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat:no-repeat;
+  background-position:right 10px center;
+}
+
+.admin-post-box select:focus{
+  border:1px solid #FF7A00 !important;
+  outline:none;
+  box-shadow:0 0 0 3px rgba(255,122,0,0.08);
+}
+
+
+/* ============================= */
+/* POST BUTTON */
+/* ============================= */
+
+.admin-post-box button{
+
+  background:#FF7A00 !important;
+  border:none !important;
+  color:white !important;
+
+  font-weight:700;
+  border-radius:10px;
+
+  padding:10px 20px;
+
+  transition:all 0.25s ease;
+
+  cursor:pointer;
+}
+
+
+/* hover animation */
+
+.admin-post-box button:hover{
+
+  background:#e46e00 !important;
+
+  transform:translateY(-2px);
+
+  box-shadow:0 8px 18px rgba(255,122,0,0.25);
+
+}
+
+
+/* click animation */
+
+.admin-post-box button:active{
+
+  transform:translateY(0px);
+
+  box-shadow:0 3px 8px rgba(255,122,0,0.2);
+
+}
+
+.dropdown-wrapper{
+  position:relative;
+}
+
+.dropdown-wrapper::after{
+  content:"▼";
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:12px;
+  color:#aaa;
+  pointer-events:none;
+}
