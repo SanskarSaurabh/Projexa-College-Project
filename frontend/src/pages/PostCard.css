@@ -72,3 +72,87 @@
   border-radius:10px;
   margin-left:8px;
 }
+
+
+/* MENU */
+
+.fb-menu{
+  margin-left:auto;
+  position:relative;
+}
+
+
+/* DROPDOWN */
+
+.fb-dropdown{
+  position:absolute;
+  right:0;
+  top:28px;
+  background:white;
+  border-radius:8px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.15);
+  padding:6px 0;
+  z-index:20;
+  animation:dropdownFade 0.18s ease;
+}
+
+.dropdown-item{
+  width:100%;
+  border:none;
+  background:none;
+  padding:10px 16px;
+  text-align:left;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.dropdown-item:hover{
+  background:#f3f4f6;
+}
+
+.delete-post-btn{
+  color:#e11d48;
+}
+
+/* EDIT BOX */
+
+.edit-post-box textarea{
+  width:100%;
+  border-radius:8px;
+  padding:10px;
+  border:1px solid #e5e7eb;
+}
+
+.edit-actions{
+  margin-top:8px;
+  display:flex;
+  gap:8px;
+}
+
+.save-edit-btn{
+  background:#ff7a00;
+  border:none;
+  color:white;
+  padding:6px 12px;
+  border-radius:6px;
+}
+
+.cancel-edit-btn{
+  background:#e5e7eb;
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+}
+
+/* ANIMATION */
+
+@keyframes dropdownFade{
+  from{
+    opacity:0;
+    transform:translateY(-6px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
