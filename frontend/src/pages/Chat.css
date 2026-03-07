@@ -66,6 +66,33 @@
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
+/* ===== SIDEBAR SCROLL FIX ===== */
+
+.chat-sidebar{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+
+/* user list scroll */
+
+.user-scroller{
+  flex:1;
+  overflow-y:auto;
+  min-height:0;
+}
+
+/* scrollbar style */
+
+.user-scroller::-webkit-scrollbar{
+  width:6px;
+}
+
+.user-scroller::-webkit-scrollbar-thumb{
+  background:#ff7a00;
+  border-radius:10px;
+}
+
 .sidebar-brand-box h5 {
   font-weight: 700;
 }
