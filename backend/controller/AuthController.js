@@ -122,20 +122,26 @@ export const forgotPassword = async (req, res) => {
     const token = crypto.randomBytes(32).toString("hex");
 
     user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 min
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
 
     await user.save();
 
     // 🔥 Email setup
     const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+    // ✅ 🔥 FIX (Fallback added)
+    const FRONTEND_URL =
+      process.env.FRONTEND_URL || "https://krmuconnect.vercel.app";
+
+    console.log("FRONTEND_URL:", FRONTEND_URL); // debug
+
+    const resetLink = `${FRONTEND_URL}/reset-password/${token}`;
 
     await transporter.sendMail({
       to: user.email,
@@ -153,6 +159,7 @@ export const forgotPassword = async (req, res) => {
     });
 
   } catch (error) {
+    console.log("ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };
