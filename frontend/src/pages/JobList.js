@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import { getAllJobs } from "../api/PlacementApi";
+import { getAllJobs, applyJob } from "../api/PlacementApi"; // added applyJob import
 import "./JobList.css";
 
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedJob, setSelectedJob] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -21,16 +22,41 @@ const JobList = () => {
     fetchJobs();
   }, []);
 
+  // NEW: Handle Application Logic
+  const handleApplyClick = async (jobId, applyLink) => {
+    try {
+      // 1. Backend API hit karke data save karte hain
+      const res = await applyJob(jobId);
+
+      if (res.data.success) {
+        alert("Application recorded successfully!");
+        
+        // 2. Data save hone ke baad external link kholte hain
+        if (applyLink) {
+          window.open(applyLink, "_blank");
+        } else {
+          alert("Note: No external link provided for this job.");
+        }
+      }
+    } catch (error) {
+      // Agar backend se error aaye (jaise "Already Applied")
+      const errorMsg = error.response?.data?.message || "Error applying for job";
+      alert(errorMsg);
+      
+      // Error ke bawajood agar aap link khulwana chahte hain toh niche wali line uncomment karein:
+      // if (applyLink) window.open(applyLink, "_blank");
+    }
+  };
+
   return (
     <div className="az-wrapper">
-      {/* Background Blobs scoped to Auth/Placement views */}
       <div className="az-blobs">
         <div className="az-blob az-blob-1"></div>
         <div className="az-blob az-blob-2"></div>
       </div>
-      
+
       <Navbar />
-      
+
       <div className="container az-content">
         <header className="az-page-header mb-5">
           <div className="az-brand-mini">
@@ -56,8 +82,8 @@ const JobList = () => {
           <div className="row g-4">
             {jobs.map((job, index) => (
               <div key={job._id} className="col-md-6 col-xl-4">
-                <div 
-                  className="az-card az-job-card" 
+                <div
+                  className="az-card az-job-card"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="az-card-top">
@@ -83,7 +109,10 @@ const JobList = () => {
                     </div>
                   </div>
 
-                  <button className="az-btn-primary az-full-width">
+                  <button
+                    className="az-btn-primary az-full-width"
+                    onClick={() => setSelectedJob(job)}
+                  >
                     View Details & Apply
                   </button>
                 </div>
@@ -92,6 +121,44 @@ const JobList = () => {
           </div>
         )}
       </div>
+
+      {/* JOB DETAILS MODAL */}
+      {selectedJob && (
+        <div className="pd-modal-overlay">
+          <div className="pd-modal-card">
+            <div className="pd-modal-header">
+              <h4>{selectedJob.companyName}</h4>
+              <button onClick={() => setSelectedJob(null)}>✕</button>
+            </div>
+
+            <div className="pd-modal-content">
+              <h6>Role</h6>
+              <p>{selectedJob.role}</p>
+
+              <h6>Department</h6>
+              <p>{selectedJob.department}</p>
+
+              <h6>About Company</h6>
+              <p>{selectedJob.aboutCompany || "Not provided"}</p>
+
+              <h6>Job Description</h6>
+              <p>{selectedJob.jobDescription || "Not provided"}</p>
+
+              <h6>Requirements</h6>
+              <p>{selectedJob.requirements || "Not provided"}</p>
+
+              <div style={{ marginTop: "20px" }}>
+                <button
+                  className="az-btn-primary"
+                  onClick={() => handleApplyClick(selectedJob._id, selectedJob.applyLink)}
+                >
+                  Apply Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

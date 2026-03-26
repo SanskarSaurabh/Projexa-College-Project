@@ -13,7 +13,7 @@ const jobSchema = new mongoose.Schema(
     },
 
     department: {
-      type: String, // eligible department
+      type: String,
       required: true,
     },
 
@@ -27,10 +27,45 @@ const jobSchema = new mongoose.Schema(
       required: true,
     },
 
+    aboutCompany: {
+      type: String,
+    },
+
+    jobDescription: {
+      type: String,
+    },
+
+    requirements: {
+      type: String,
+    },
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // placement officer
+      ref: "User",
     },
+
+    applyLink: {
+      type: String
+    },
+
+    // --- UPDATED APPLICANTS SECTION (DYNAMIC) ---
+    applicants: [
+      {
+        studentId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User"
+        },
+        // Snapshot mein student ka apply karte waqt ka saara data save hoga
+        // Isme name, roll no, marks, links sab automatically store ho jayenge
+        snapshot: {
+          type: Object 
+        },
+        appliedAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ]
   },
   { timestamps: true }
 );

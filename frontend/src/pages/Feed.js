@@ -93,7 +93,7 @@ const Feed = () => {
 
         await editPostApi(id, text);
 
-        toast.success("Post updated successfully");
+        toast.success("Post updated. Waiting for admin approval.");
 
         fetchPosts();
 
@@ -117,22 +117,24 @@ const Feed = () => {
 
     share: (post) => {
 
-      if (navigator.share) {
+  const postUrl = `${window.location.origin}/post/${post._id}`;
 
-        navigator.share({
-          title: "KRMU Post",
-          text: post.text,
-          url: window.location.href
-        });
+  if (navigator.share) {
 
-      } else {
+    navigator.share({
+      title: "Campus Connect Post",
+      text: post.text,
+      url: postUrl
+    });
 
-        navigator.clipboard.writeText(window.location.href);
-        toast.success("Link copied!");
+  } else {
 
-      }
+    navigator.clipboard.writeText(postUrl);
+    toast.success("Post link copied!");
 
-    }
+  }
+
+}
 
   };
 

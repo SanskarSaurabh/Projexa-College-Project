@@ -3,7 +3,7 @@ import API from "./Axios";
 /* CREATE POST */
 
 export const createPost = (data)=>
-API.post("/posts",data,{
+API.post("/posts/create",data,{
 headers:{
 "Content-Type":"multipart/form-data"
 }

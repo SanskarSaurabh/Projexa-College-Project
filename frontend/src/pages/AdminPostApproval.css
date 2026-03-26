@@ -1,4 +1,8 @@
-.moderation-page-bg { background: #FAF9F6; min-height: 100vh; padding: 100px 5%; }
+.moderation-page-bg { 
+  background: #FAF9F6; 
+  min-height: 100vh; 
+  padding: 100px 5%; 
+}
 
 .moderation-header {
   display: flex;
@@ -7,7 +11,7 @@
   margin-bottom: 40px;
 }
 
-/* 💊 SHARED SWITCHER (Same as Dashboard to prevent flickering) */
+/* 💊 SWITCHER */
 .role-switcher {
   background: #EFEBE3;
   padding: 6px;
@@ -53,21 +57,201 @@
   flex-direction: column;
 }
 
-.post-author { display: flex; gap: 12px; margin-bottom: 15px; }
+.post-author { 
+  display: flex; 
+  gap: 12px; 
+  margin-bottom: 15px; 
+}
+
 .author-initial { 
-  width: 40px; height: 40px; background: #FF7A00; color: white; 
-  border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800;
+  width: 40px; 
+  height: 40px; 
+  background: #FF7A00; 
+  color: white; 
+  border-radius: 50%; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-weight: 800;
 }
 
-.post-media-box { width: 100%; height: 200px; border-radius: 12px; overflow: hidden; margin: 15px 0; }
-.post-media-box img { width: 100%; height: 100%; object-fit: cover; }
+.post-body {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
 
-.mod-actions { display: flex; gap: 10px; margin-top: auto; }
+/* MEDIA */
+.post-media-box { 
+  width: 100%; 
+  height: 200px; 
+  border-radius: 12px; 
+  overflow: hidden; 
+  margin: 15px 0; 
+}
+
+.post-media-box img,
+.post-media-box video { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+}
+
+/* BUTTONS */
+.mod-actions { 
+  display: flex; 
+  gap: 10px; 
+  margin-top: auto; 
+}
+
 .btn-approve-full { 
-  flex: 2; background: #FF7A00; color: white; border: none; 
-  padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer;
+  flex: 2; 
+  background: #FF7A00; 
+  color: white; 
+  border: none; 
+  padding: 12px; 
+  border-radius: 10px; 
+  font-weight: 700; 
+  cursor: pointer;
 }
+
 .btn-reject-outline { 
-  flex: 1; background: transparent; border: 1.5px solid #FF4D4D; 
-  color: #FF4D4D; border-radius: 10px; font-weight: 700; cursor: pointer;
+  flex: 1; 
+  background: transparent; 
+  border: 1.5px solid #FF4D4D; 
+  color: #FF4D4D; 
+  border-radius: 10px; 
+  font-weight: 700; 
+  cursor: pointer;
+}
+
+.btn-preview{
+  background:#FF7A00;
+  border:none;
+  padding:10px 14px;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+/* ================= PREVIEW MODAL ================= */
+
+.preview-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  z-index:1000;
+}
+
+/* 🔥 MAIN MODAL */
+.modal-content-box {
+  background: white;
+  border-radius: 16px;
+
+  width: 95%;
+  max-width: 750px;
+  max-height: 90vh;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+/* HEADER */
+.modal-content-box .post-author {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+/* TEXT */
+.modal-content-box .post-body {
+  padding: 15px 20px;
+  font-size: 15px;
+  line-height: 1.5;
+  border-bottom: 1px solid #eee;
+}
+
+/* IMAGE WRAPPER */
+.modal-image-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  overflow: hidden;
+}
+
+/* IMAGE */
+.image-modal-content {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+/* CLOSE BUTTON */
+.close-preview{
+  position:absolute;
+  top:15px;
+  right:20px;
+  background:rgba(0,0,0,0.6);
+  border:none;
+  color:white;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  font-size:18px;
+  cursor:pointer;
+}
+
+/* NAV BUTTONS */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  font-size: 22px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.nav-btn.left { left: 20px; }
+.nav-btn.right { right: 20px; }
+
+/* ROLE BADGE */
+.role-badge{
+  margin-left:8px;
+  background:#fff4e6;
+  color:#ff7a00;
+  padding:3px 8px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:600;
+  text-transform:capitalize;
+}
+
+.author-initial {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.admin-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

@@ -1,12 +1,27 @@
-import express from "express"
-import { loginUser, registerUser } from "../controller/AuthController.js"
+import express from "express";
+import {
+  loginUser,
+  registerUser,
+  updateProfilePic,
+  forgotPassword,
+  resetPassword
+} from "../controller/AuthController.js";
 
-const router=express.Router()
+import protect from "../Middleware/AuthMiddleware.js";
 
-router.post("/register",registerUser)
-router.post("/login",loginUser)
+const router = express.Router();
 
+// ================= AUTH =================
+router.post("/register", registerUser);
+router.post("/login", loginUser);
 
+// ================= PROFILE =================
+router.put("/update-profile-pic", protect, updateProfilePic);
 
+// ================= FORGOT PASSWORD =================
+router.post("/forgot-password", forgotPassword);
 
-export default router
+// ================= RESET PASSWORD =================
+router.post("/reset-password/:token", resetPassword);
+
+export default router;

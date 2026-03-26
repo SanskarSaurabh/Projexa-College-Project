@@ -10,3 +10,8 @@ export const approveUser = (id) =>
 // reject user
 export const rejectUser = (id) =>
   API.delete(`/admin/reject-user/${id}`);
+
+/* ================= NEW ADMIN STATS API ================= */
+
+export const getAdminStats = () =>
+  API.get("/admin/stats");

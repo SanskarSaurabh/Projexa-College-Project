@@ -77,3 +77,59 @@
 
 .az-empty-state { text-align: center; color: #94a3b8; }
 .az-empty-state i { font-size: 3rem; margin-bottom: 10px; display: block; }
+
+
+
+/* ================================================= */
+/* ADDED STYLES (NO EXISTING CODE CHANGED) */
+/* ================================================= */
+
+.pd-modal-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+}
+
+.pd-modal-card{
+  width:500px;
+  max-height:80vh;
+  overflow-y:auto;
+  background:white;
+  border-radius:25px;
+  padding:25px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.1);
+}
+
+.pd-modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.pd-modal-header button{
+  border:none;
+  background:#f1f5f9;
+  border-radius:50%;
+  width:30px;
+  height:30px;
+  cursor:pointer;
+}
+
+.pd-modal-content h6{
+  font-weight:800;
+  margin-top:15px;
+  color:#FF7A00;
+}
+
+.pd-modal-content p{
+  color:#475569;
+  font-size:0.9rem;
+}

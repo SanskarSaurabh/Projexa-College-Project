@@ -3,8 +3,10 @@ import { createPost } from "../api/PostApi";
 import toast from "react-hot-toast";
 
 const CreatePost = ({ onPostCreated }) => {
+
   const [text, setText] = useState("");
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState(null); // OLD
+  const [files, setFiles] = useState([]); // NEW
   const [uploadType, setUploadType] = useState("image");
   const [isUploading, setIsUploading] = useState(false);
 
@@ -15,23 +17,31 @@ const CreatePost = ({ onPostCreated }) => {
   };
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
 
-    if (selectedFile) {
-      if (selectedFile.size > 50 * 1024 * 1024) {
-        toast.error("File exceeds 50MB limit!");
-        e.target.value = null;
-        return;
+    const selectedFiles = Array.from(e.target.files);
+
+    const validFiles = selectedFiles.filter(file => {
+
+      if (file.size > 50 * 1024 * 1024) {
+        toast.error(`${file.name} exceeds 50MB`);
+        return false;
       }
 
-      setFile(selectedFile);
+      return true;
+    });
+
+    setFiles(validFiles);
+
+    if (validFiles.length > 0) {
+      setFile(validFiles[0]); // backward support
     }
+
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!text.trim() && !file) {
+    if (!text.trim() && files.length === 0) {
       return toast("Please add text or a file!", { icon: "⚠️" });
     }
 
@@ -41,21 +51,35 @@ const CreatePost = ({ onPostCreated }) => {
     const formData = new FormData();
     formData.append("text", text);
 
-    if (file) formData.append("file", file);
+    if (files.length > 0) {
+
+      files.forEach(f => {
+        formData.append("mediaFiles", f);
+      });
+
+    } else if (file) {
+
+      formData.append("file", file);
+
+    }
 
     try {
+
       await createPost(formData);
 
       toast.success("Post submitted for approval!", { id: loadingToast });
 
       setText("");
       setFile(null);
+      setFiles([]);
 
       if (onPostCreated) onPostCreated();
 
     } catch (error) {
+
       console.error(error);
       toast.error("Upload failed. Try again.", { id: loadingToast });
+
     } finally {
       setIsUploading(false);
     }
@@ -63,6 +87,7 @@ const CreatePost = ({ onPostCreated }) => {
 
   return (
     <div className="create-post-card p-4 bg-dark-card border border-secondary rounded shadow">
+
       <h5 className="text-white mb-3">Create a Post</h5>
 
       <form onSubmit={handleSubmit}>
@@ -77,8 +102,6 @@ const CreatePost = ({ onPostCreated }) => {
 
         <div className="row g-2 align-items-center mb-3">
 
-          {/* Dropdown wrapper added ONLY for arrow fix */}
-
           <div className="col-auto dropdown-wrapper">
 
             <select
@@ -87,6 +110,7 @@ const CreatePost = ({ onPostCreated }) => {
               onChange={(e) => {
                 setUploadType(e.target.value);
                 setFile(null);
+                setFiles([]);
               }}
             >
               <option value="image">📷 Photo</option>
@@ -99,6 +123,7 @@ const CreatePost = ({ onPostCreated }) => {
           <div className="col">
             <input
               type="file"
+              multiple
               className="form-control bg-dark text-white border-secondary"
               accept={mimeTypes[uploadType]}
               onChange={handleFileChange}

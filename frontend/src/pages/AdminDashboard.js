@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getPendingUsers, approveUser, rejectUser } from "../api/AdminApi";
+import { getPendingUsers, approveUser, rejectUser, getAdminStats } from "../api/AdminApi";
 import Navbar from "../components/Navbar";
 import toast from "react-hot-toast";
 import "./AdminDashboard.css";
@@ -8,6 +8,12 @@ import "./AdminDashboard.css";
 const AdminDashboard = () => {
 
   const [users, setUsers] = useState([]);
+
+  const [stats, setStats] = useState({
+    totalStudents: 0,
+    pendingStudents: 0,
+    approvedStudents: 0
+  });
 
   const fetchUsers = async () => {
     try {
@@ -18,8 +24,23 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchStats = async () => {
+    try {
+
+      const res = await getAdminStats();
+
+      setStats(res.data);
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+  };
+
   useEffect(() => {
     fetchUsers();
+    fetchStats();
   }, []);
 
   const handleAction = async (id, actionType) => {
@@ -32,6 +53,8 @@ const AdminDashboard = () => {
       else await rejectUser(id);
 
       setUsers(prev => prev.filter(user => user._id !== id));
+
+      fetchStats();
 
       toast.success(
         `User ${actionType === "approve" ? "Verified" : "Rejected"}`,
@@ -53,8 +76,32 @@ const AdminDashboard = () => {
         <div className="admin-top-bar">
 
           <div className="admin-title-section">
+
             <h1>User Verification</h1>
+
             <p>Review institutional registration requests</p>
+
+            {/* DASHBOARD STATS */}
+
+            <div className="admin-stats-grid">
+
+              <div className="admin-stat-card">
+                <h3>{stats.totalStudents}</h3>
+                <span>Total Students</span>
+              </div>
+
+              <div className="admin-stat-card pending">
+                <h3>{stats.pendingStudents}</h3>
+                <span>Pending Requests</span>
+              </div>
+
+              <div className="admin-stat-card approved">
+                <h3>{stats.approvedStudents}</h3>
+                <span>Approved Students</span>
+              </div>
+
+            </div>
+
           </div>
 
           <div className="role-switcher">

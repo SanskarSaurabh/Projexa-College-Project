@@ -52,43 +52,74 @@ const Login = () => {
       </header>
 
       <main className="auth-zone-main">
-        {/* Main Card with Right Accent */}
         <div className="az-card-container">
           <div className="az-card">
+            
+            {/* Role Switch */}
             <div className="az-role-switcher three-cols">
               <button type="button" className={userRole === "student" ? "az-role-btn active" : "az-role-btn"} onClick={() => setUserRole("student")}>Student</button>
               <button type="button" className={userRole === "placement" ? "az-role-btn active" : "az-role-btn"} onClick={() => setUserRole("placement")}>Placement</button>
               <button type="button" className={userRole === "admin" ? "az-role-btn active" : "az-role-btn"} onClick={() => setUserRole("admin")}>Admin</button>
             </div>
 
+            {/* Intro */}
             <div className="az-intro">
               <h2>Welcome Back</h2>
               <p>Sign in to your <span className="text-orange">{userRole}</span> account</p>
             </div>
 
+            {/* Form */}
             <form onSubmit={handleSubmit} className="az-form">
+              
               <div className="az-input-group">
                 <i className="bi bi-envelope-at-fill"></i>
-                <input type="email" placeholder="University Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <input 
+                  type="email" 
+                  placeholder="University Email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  required 
+                />
               </div>
+
               <div className="az-input-group">
                 <i className="bi bi-lock-fill"></i>
-                <input type={showPassword ? "text" : "password"} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <span className="az-pass-toggle" onClick={() => setShowPassword(!showPassword)}>{showPassword ? "HIDE" : "SHOW"}</span>
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  placeholder="Password" 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  required 
+                />
+                <span 
+                  className="az-pass-toggle" 
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? "HIDE" : "SHOW"}
+                </span>
               </div>
-              <Link to="/forgot" className="az-forgot-link">Forgot Password?</Link>
+
+              {/* ✅ FIXED LINK */}
+              <Link to="/forgot-password" className="az-forgot-link">
+                Forgot Password?
+              </Link>
+
               <button type="submit" className="az-btn-primary">
                 Authorize Login <i className="bi bi-arrow-right-short"></i>
               </button>
             </form>
 
+            {/* Signup */}
             <div className="az-signup-prompt">
-              <p>New Student? <Link to="/register" className="az-signup-btn">Create Account</Link></p>
+              <p>
+                New Student?{" "}
+                <Link to="/register" className="az-signup-btn">
+                  Create Account
+                </Link>
+              </p>
             </div>
+
           </div>
-          
-         
-          
         </div>
       </main>
     </div>

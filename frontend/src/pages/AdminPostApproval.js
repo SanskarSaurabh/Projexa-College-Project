@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { getPendingPosts, approvePost, rejectPost } from "../api/PostApi";
 import Navbar from "../components/Navbar";
@@ -9,6 +9,13 @@ const AdminPostApproval = () => {
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [previewPost, setPreviewPost] = useState(null);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [zoom, setZoom] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef({ x: 0, y: 0 });
 
   const fetchPosts = async () => {
     try {
@@ -43,11 +50,31 @@ const AdminPostApproval = () => {
       );
 
     } catch (err) {
-
       toast.error("Failed", { id: tId });
-
     }
+  };
 
+  const handleMouseDown = (e) => {
+    if (zoom <= 1) return;
+
+    setIsDragging(true);
+    dragStart.current = {
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    };
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+
+    setPosition({
+      x: e.clientX - dragStart.current.x,
+      y: e.clientY - dragStart.current.y
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
   };
 
   return (
@@ -58,11 +85,9 @@ const AdminPostApproval = () => {
       <main className="moderation-container">
 
         <div className="moderation-header">
-
           <h1>Campus Moderation</h1>
 
           <div className="role-switcher">
-
             <Link to="/admin" className="role-btn">
               Verify Users
             </Link>
@@ -74,9 +99,7 @@ const AdminPostApproval = () => {
             <button className="role-btn active">
               Verify Posts
             </button>
-
           </div>
-
         </div>
 
         {loading ? (
@@ -93,55 +116,113 @@ const AdminPostApproval = () => {
               <div key={post._id} className="post-mod-card">
 
                 <div className="post-author">
-
                   <div className="author-initial">
-                    {post.author?.name?.charAt(0)}
-                  </div>
+  {post.author?.profilePic ? (
+    <img
+      src={post.author.profilePic}
+      alt="profile"
+      className="admin-avatar-img"
+    />
+  ) : (
+    post.author?.name?.charAt(0)
+  )}
+</div>
 
                   <div className="author-meta">
                     <strong>{post.author?.name}</strong>
-                    <span>{post.author?.role}</span>
+                    <span className="role-badge">
+                      {post.author?.role}
+                    </span>
                   </div>
-
                 </div>
 
                 <p className="post-body">
                   {post.text}
                 </p>
 
-                {/* MEDIA DISPLAY FIX */}
+                {(post.media?.url || post.mediaFiles?.length > 0) && (
 
-                {post.media?.url && (
                   <div className="post-media-box">
 
-                    {post.media.resource_type === "video" ? (
+                    {post.mediaFiles?.length > 0 ? (
 
-                      <video
-                        src={post.media.url}
-                        controls
-                        style={{
-                          width: "100%",
-                          borderRadius: "12px"
-                        }}
-                      />
+                      <div className="media-slider">
+
+                        {post.mediaFiles.map((file, index) => (
+
+                          file.resource_type === "video" ? (
+
+                            <video
+                              key={index}
+                              src={file.url}
+                              controls
+                              style={{ width: "100%", borderRadius: "12px" }}
+                            />
+
+                          ) : (
+
+                            <img
+                              key={index}
+                              src={file.url}
+                              alt="post"
+                              style={{ width: "100%", borderRadius: "12px", cursor: "pointer" }}
+                              onClick={() => {
+                                setPreviewPost(post);
+                                setCurrentIndex(index);
+                                setZoom(1);
+                                setPosition({ x: 0, y: 0 });
+                              }}
+                            />
+
+                          )
+
+                        ))}
+
+                      </div>
 
                     ) : (
 
-                      <img
-                        src={post.media.url}
-                        alt="Post content"
-                        style={{
-                          width: "100%",
-                          borderRadius: "12px"
-                        }}
-                      />
+                      post.media.resource_type === "video" ? (
+
+                        <video
+                          src={post.media.url}
+                          controls
+                          style={{ width: "100%", borderRadius: "12px" }}
+                        />
+
+                      ) : (
+
+                        <img
+                          src={post.media.url}
+                          alt="post"
+                          style={{ width: "100%", borderRadius: "12px", cursor: "pointer" }}
+                          onClick={() => {
+                            setPreviewPost(post);
+                            setCurrentIndex(0);
+                            setZoom(1);
+                            setPosition({ x: 0, y: 0 });
+                          }}
+                        />
+
+                      )
 
                     )}
 
                   </div>
+
                 )}
 
                 <div className="mod-actions">
+
+                  <button
+                    className="btn-preview"
+                    onClick={() => {
+                      setPreviewPost(post);
+                      setCurrentIndex(0);
+                    }}
+                  >
+                    Preview
+                  </button>
 
                   <button
                     className="btn-approve-full"
@@ -167,6 +248,88 @@ const AdminPostApproval = () => {
         )}
 
       </main>
+
+      {/* 🔥 FIXED MODAL */}
+      {previewPost && (
+
+        <div className="image-modal-overlay" onClick={() => setPreviewPost(null)}>
+
+          <div className="modal-content-box" onClick={(e) => e.stopPropagation()}>
+
+            <div className="post-author">
+              <div className="author-initial">
+  {previewPost.author?.profilePic ? (
+    <img
+      src={previewPost.author.profilePic}
+      alt="profile"
+      className="admin-avatar-img"
+    />
+  ) : (
+    previewPost.author?.name?.charAt(0)
+  )}
+</div>
+
+              <div className="author-meta">
+                <strong>{previewPost.author?.name}</strong>
+                <span className="role-badge">
+                  {previewPost.author?.role}
+                </span>
+              </div>
+            </div>
+
+            <p className="post-body">{previewPost.text}</p>
+
+            <div className="modal-image-wrapper">
+
+              <img
+                src={
+                  previewPost.mediaFiles?.length > 0
+                    ? previewPost.mediaFiles[currentIndex]?.url
+                    : previewPost.media?.url
+                }
+                alt="full"
+                className="image-modal-content"
+                style={{
+                  transform: `scale(${zoom}) translate(${position.x}px, ${position.y}px)`
+                }}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                onWheel={(e) => {
+                  e.preventDefault();
+                  const delta = -e.deltaY * 0.001;
+                  setZoom(prev => Math.min(Math.max(prev + delta, 1), 3));
+                }}
+              />
+
+            </div>
+
+            {previewPost.mediaFiles?.length > 1 && (
+              <>
+                <button className="nav-btn left" onClick={() => {
+                  setCurrentIndex(prev =>
+                    prev === 0 ? previewPost.mediaFiles.length - 1 : prev - 1
+                  );
+                  setZoom(1);
+                  setPosition({ x: 0, y: 0 });
+                }}>◀</button>
+
+                <button className="nav-btn right" onClick={() => {
+                  setCurrentIndex(prev =>
+                    prev === previewPost.mediaFiles.length - 1 ? 0 : prev + 1
+                  );
+                  setZoom(1);
+                  setPosition({ x: 0, y: 0 });
+                }}>▶</button>
+              </>
+            )}
+
+          </div>
+
+        </div>
+
+      )}
 
     </div>
   );

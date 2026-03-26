@@ -9,9 +9,14 @@ import AdminPostApproval from "./pages/AdminPostApproval";
 import PlacementDashboard from "./pages/PlacementDashboard";
 import JobList from "./pages/JobList";
 import Chat from "./pages/chat";
-import AdminAnnouncement from "./pages/AdminAnnouncement";   // NEW IMPORT
+import AdminAnnouncement from "./pages/AdminAnnouncement";
+import PlacementApplicants from "./pages/PlacementApplicants";
+import DeleteStudent from "./pages/DeleteStudent"; 
+import SinglePost from "./pages/SinglePost";
+import StudentProfile from "./pages/StudentProfile";
+import ForgotPassword from "./pages/ForgotPassword";   // ✅ NEW
+import ResetPassword from "./pages/ResetPassword";     // ✅ NEW
 import { Toaster } from 'react-hot-toast';
-
 
 function App() {
   return (
@@ -19,11 +24,16 @@ function App() {
       <Toaster position="top-center" reverseOrder={false} />
 
       <Routes>
-
+        {/* Public Routes */}
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
+        {/* ✅ NEW ROUTES */}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+        {/* --- STUDENT ROUTES --- */}
         <Route
           path="/dashboard"
           element={
@@ -33,6 +43,71 @@ function App() {
           }
         />
 
+        <Route
+          path="/student-profile"
+          element={
+            <ProtectedRoute>
+              <StudentProfile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/feed"
+          element={
+            <ProtectedRoute>
+              <Feed />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/post/:id"
+          element={
+            <ProtectedRoute>
+              <SinglePost />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* --- PLACEMENT ROUTES --- */}
+        <Route
+          path="/placements"
+          element={
+            <ProtectedRoute>
+              <PlacementDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/jobs"
+          element={
+            <ProtectedRoute>
+              <JobList />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/placement-applicants"
+          element={
+            <ProtectedRoute>
+              <PlacementApplicants />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* --- ADMIN ROUTES --- */}
         <Route
           path="/admin"
           element={
@@ -52,37 +127,10 @@ function App() {
         />
 
         <Route
-          path="/feed"
+          path="/admin/delete-student"
           element={
             <ProtectedRoute>
-              <Feed />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/chat"
-          element={
-            <ProtectedRoute>
-              <Chat />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/placements"
-          element={
-            <ProtectedRoute>
-              <PlacementDashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/jobs"
-          element={
-            <ProtectedRoute>
-              <JobList />
+              <DeleteStudent />
             </ProtectedRoute>
           }
         />

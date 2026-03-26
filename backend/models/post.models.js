@@ -2,14 +2,23 @@ import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema(
   {
-    text: { type: String},
+    text: { type: String },
     
-    // Multimedia Support
+    // OLD SINGLE MEDIA (UNCHANGED)
     media: {
       url: { type: String },
-      public_id: { type: String }, // Used to delete from Cloudinary
-      resource_type: { type: String } // 'image', 'video', or 'raw' (for docs)
+      public_id: { type: String },
+      resource_type: { type: String }
     },
+
+    // ✅ NEW MULTIPLE MEDIA SUPPORT (ADDED)
+    mediaFiles: [
+      {
+        url: String,
+        public_id: String,
+        resource_type: String
+      }
+    ],
 
     author: {
       type: mongoose.Schema.Types.ObjectId,
@@ -17,10 +26,12 @@ const postSchema = new mongoose.Schema(
       required: true,
     },
 
-    role: { type: String }, // student / staff
+    role: { type: String },
+
     isApproved: { type: Boolean, default: false },
 
-    // Social Features
+    isEdited: { type: Boolean, default: false },
+
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     
     comments: [
@@ -32,7 +43,7 @@ const postSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true } // Handles Date and Time automatically
+  { timestamps: true }
 );
 
 export default mongoose.model("Post", postSchema);

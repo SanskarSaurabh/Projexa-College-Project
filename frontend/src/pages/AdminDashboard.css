@@ -108,3 +108,36 @@
   margin-bottom:15px;
 }
 
+.admin-stats-grid{
+  display:flex;
+  gap:15px;
+  margin-top:15px;
+}
+
+.admin-stat-card{
+  background:white;
+  padding:15px 25px;
+  border-radius:14px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.05);
+  text-align:center;
+  min-width:140px;
+}
+
+.admin-stat-card h3{
+  margin:0;
+  font-size:1.6rem;
+  font-weight:800;
+}
+
+.admin-stat-card span{
+  font-size:0.8rem;
+  color:#777;
+}
+
+.admin-stat-card.pending{
+  border-left:4px solid #f59e0b;
+}
+
+.admin-stat-card.approved{
+  border-left:4px solid #22c55e;
+}

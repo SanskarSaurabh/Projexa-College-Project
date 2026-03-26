@@ -1,0 +1,105 @@
+/* PAGE BACKGROUND */
+
+.delete-student-page {
+  background-color: #FAF9F6;
+  min-height: 100vh;
+
+  /* FIX FOR NAVBAR OVERLAP */
+  padding: 120px 5% 40px;
+}
+
+/* HEADER */
+
+.delete-student-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.delete-student-header h1 {
+  font-weight: 800;
+  color: #1A1C1E;
+  font-size: 1.8rem;
+}
+
+/* SEARCH BOX */
+
+.student-search-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.student-search-box input {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #E5E5E5;
+  outline: none;
+  font-size: 0.9rem;
+  width: 260px;
+}
+
+.student-search-box button {
+  background: #FF7A00;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.student-search-box button:hover {
+  background: #e66e00;
+}
+
+/* TABLE CARD */
+
+.delete-student-table-card {
+  background: white;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  overflow: hidden;
+}
+
+/* TABLE */
+
+.delete-student-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.delete-student-table th {
+  background: #FDFDFD;
+  padding: 20px;
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #999;
+  border-bottom: 1px solid #EEE;
+}
+
+.delete-student-table td {
+  padding: 20px;
+  border-bottom: 1px solid #F9F9F9;
+}
+
+/* DELETE BUTTON */
+
+.delete-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: #FFEBEE;
+  color: #D32F2F;
+  transition: 0.2s;
+}
+
+.delete-btn:hover {
+  background: #D32F2F;
+  color: white;
+}

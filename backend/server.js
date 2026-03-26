@@ -11,6 +11,8 @@ import adminRoute from "./routes/admin.routes.js";
 import postRoute from "./routes/post.routes.js";
 import placementRoute from "./routes/placement.routes.js";
 import chatRoute from "./routes/chat.routes.js";
+import adminStudentRoutes from "./routes/AdminStudentRoutes.js"; // Student Profile Logic
+import uploadRoutes from "./routes/upload.routes.js";
 
 dotenv.config();
 
@@ -51,25 +53,25 @@ app.use(express.urlencoded({ extended: true }));
 // --- 3. ROUTES ---
 app.use("/api/auth", AuthRoute);
 app.use("/api/admin", adminRoute);
-app.use("/api/posts", postRoute); // This is the route we are debugging
+app.use("/api/posts", postRoute); 
 app.use("/api/chat", chatRoute);
 app.use("/api/placements", placementRoute);
+app.use("/api/upload", uploadRoutes);
 
-// --- 4. THE "OBJECT OBJECT" FIX (GLOBAL ERROR HANDLER) ---
-// This MUST be the last middleware in your file
+/* ✅ FIX: AdminStudentRoutes ko /api/user par mount kiya gaya hai.
+  Ab Profile fetch karne ke liye URL hoga: http://localhost:5000/api/user/profile
+*/
+app.use("/api/user", adminStudentRoutes); 
+
+// --- 4. GLOBAL ERROR HANDLER ---
 app.use((err, req, res, next) => {
   console.error("--- 🚨 SERVER ERROR DETECTED ---");
-  
-  // 1. Log the error properly to the terminal
-  // Using a comma ensures the object is expanded and readable
   console.error("Error Details:", err); 
 
-  // 2. Return a readable error to the frontend
   const statusCode = err.statusCode || 500;
   res.status(statusCode).json({
     success: false,
     message: err.message || "Internal Server Error",
-    // Only show stack trace in development mode
     stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
   });
 });

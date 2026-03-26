@@ -1,0 +1,221 @@
+/* --- Variables from your Login Theme --- */
+:root {
+    --thick-orange: #FF5F00;
+    --mid-orange: #FF8E00;
+    --light-orange: #FFF4E6;
+    --glow-orange: rgba(255, 95, 0, 0.4);
+}
+
+.az-profile-wrapper {
+    min-height: 100vh;
+    width: 100%;
+    background: #fffaf5;
+    position: relative;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Background Blobs */
+.az-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 0;
+    opacity: 0.35;
+}
+.az-blob-1 { width: 500px; height: 500px; background: var(--thick-orange); top: -150px; right: -100px; }
+.az-blob-2 { width: 400px; height: 400px; background: var(--mid-orange); bottom: -100px; left: -100px; }
+
+/* Main Container - Stacked Vertically */
+.az-profile-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    padding: 40px 20px;
+    z-index: 10;
+    gap: 40px; /* Space between Profile and Activity */
+}
+
+/* Card Styling */
+.az-profile-card {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(25px);
+    border-radius: 35px;
+    padding: 35px 40px;
+    width: 100%;
+    max-width: 650px; 
+    border: 1px solid white;
+    border-right: 4px solid var(--thick-orange); 
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.1), 10px 0 30px var(--glow-orange);
+}
+
+/* Header & Avatar */
+.az-profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 20px;
+}
+
+.az-brand-text h1 { font-size: 1.4rem; font-weight: 900; color: #1e293b; margin: 0; }
+.az-brand-text h1 span { color: var(--thick-orange); }
+.az-brand-text p { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+
+.az-avatar-wrapper {
+    width: 85px; height: 85px;
+    border-radius: 20px;
+    border: 3px solid white;
+    box-shadow: 0 8px 20px var(--glow-orange);
+    position: relative;
+    overflow: hidden;
+    background: #f1f5f9;
+}
+
+.az-avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+.az-upload-overlay {
+    position: absolute; bottom: 0; width: 100%; height: 35%;
+    background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;
+    color: white; cursor: pointer; transition: 0.3s;
+}
+.az-upload-overlay:hover { height: 100%; background: rgba(255, 95, 0, 0.7); }
+
+/* Form Elements */
+.az-form-content {
+    max-height: 480px; 
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.az-form-content::-webkit-scrollbar { width: 5px; }
+.az-form-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+.az-input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.az-input-group { position: relative; margin-bottom: 15px; }
+.az-input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--thick-orange); }
+
+.az-input-group input {
+    width: 100%; padding: 12px 15px 12px 42px; border-radius: 14px;
+    border: 2px solid #f1f5f9; background: #f8fafc;
+    outline: none; transition: 0.3s; font-weight: 600;
+}
+
+.az-input-group input:focus { border-color: var(--thick-orange); background: white; box-shadow: 0 0 0 4px var(--light-orange); }
+
+/* --- ACTIVITY SECTION (STOCKED FOR POSTCARD) --- */
+.az-activity-card {
+    width: 100%;
+    max-width: 650px; 
+    margin: 0 auto;
+}
+
+/* Remove the old grid and use a vertical stack like the Feed */
+.posts-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Spacing between PostCards */
+    width: 100%;
+}
+
+/* Animation for Post Reveal */
+.post-reveal-wrapper {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: postFadeUp 0.6s ease forwards;
+}
+
+@keyframes postFadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.az-btn-primary {
+    width: 100%; padding: 16px; border-radius: 18px; border: none;
+    background: linear-gradient(135deg, var(--thick-orange), var(--mid-orange));
+    color: white; font-weight: 900; cursor: pointer; transition: 0.4s;
+    box-shadow: 0 10px 25px var(--glow-orange);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin-top: 10px;
+}
+
+/* Resume Box Styling */
+/* --- FIXED RESUME UPLOAD UI --- */
+.az-resume-upload-box {
+    background: #fff7f0;
+    border: 2px dashed #ffb380;
+    padding: 14px 18px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* ICON FIX */
+.az-resume-upload-box i {
+    font-size: 1.4rem;
+    color: #ff4d4d;
+    background: #ffe5e5;
+    padding: 10px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* CONTROLS ALIGNMENT */
+.az-resume-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: 60px;
+}
+
+/* BUTTON FIX */
+.az-resume-label {
+    background: #22c55e;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* VIEW LINK FIX */
+.az-view-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--thick-orange);
+    text-decoration: none;
+    margin-left: 8px;
+
+    display: inline-flex;
+    align-items: center;
+
+    padding: 4px 10px;
+    border-radius: 8px;
+
+    transition: 0.3s;
+}
+
+/* Hover effect */
+.az-view-link:hover {
+    background: var(--light-orange);
+    color: #000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .az-input-row { grid-template-columns: 1fr; }
+    .az-profile-card { padding: 30px 20px; }
+    .az-profile-header { flex-direction: column-reverse; text-align: center; gap: 15px; }
+}

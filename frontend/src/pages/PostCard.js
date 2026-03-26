@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./PostCard.css";
+import { createPortal } from "react-dom";
 
 const PostCard = ({ post, actions, commentText, setCommentText }) => {
 
@@ -8,7 +9,19 @@ const PostCard = ({ post, actions, commentText, setCommentText }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(post.text);
 
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  /* NEW DRAG STATES */
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const dragStart = useRef({ x: 0, y: 0 });
+
   const menuRef = useRef(null);
+
+  const authorName = post.author?.name || "Deleted User";
+  const authorRole = post.author?.role;
 
   /* CLOSE MENU WHEN CLICK OUTSIDE */
 
@@ -29,6 +42,86 @@ const PostCard = ({ post, actions, commentText, setCommentText }) => {
     };
 
   }, []);
+
+  /* ESC KEY CLOSE IMAGE MODAL */
+
+  useEffect(() => {
+
+    const escClose = (e) => {
+      if (e.key === "Escape") {
+        setShowImageModal(false);
+      }
+    };
+
+    window.addEventListener("keydown", escClose);
+
+    return () => {
+      window.removeEventListener("keydown", escClose);
+    };
+
+  }, []);
+
+  /* LOCK PAGE SCROLL WHEN IMAGE MODAL OPEN */
+
+  useEffect(() => {
+
+    if (showImageModal) {
+
+      const scrollY = window.scrollY;
+
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+
+    } else {
+
+      const scrollY = document.body.style.top;
+
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || "0") * -1);
+      }
+
+    }
+
+  }, [showImageModal]);
+
+  /* DRAG FUNCTIONS */
+
+  const handleMouseDown = (e) => {
+
+    if (zoom <= 1) return;
+
+    setIsDragging(true);
+
+    dragStart.current = {
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    };
+
+  };
+
+  const handleMouseMove = (e) => {
+
+    if (!isDragging) return;
+
+    setPosition({
+      x: e.clientX - dragStart.current.x,
+      y: e.clientY - dragStart.current.y
+    });
+
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
   /* DELETE POST */
 
@@ -55,6 +148,19 @@ const PostCard = ({ post, actions, commentText, setCommentText }) => {
 
   };
 
+  const handleCommentSubmit = () => {
+
+    if (!commentText[post._id]?.trim()) return;
+
+    actions.comment(post._id);
+
+    setCommentText({
+      ...commentText,
+      [post._id]: ""
+    });
+
+  };
+
   return (
 
     <div className="fb-card premium-glass slide-up">
@@ -64,23 +170,47 @@ const PostCard = ({ post, actions, commentText, setCommentText }) => {
       <div className="fb-header">
 
         <div className="fb-avatar">
-          {post.author.name.charAt(0)}
+          {post.author?.profilePic ? (
+            <img
+              src={post.author.profilePic}
+              alt="profile"
+              className="feed-avatar-img"
+            />
+          ) : (
+            authorName.charAt(0)
+          )}
         </div>
 
         <div className="fb-meta">
 
           <span className="fb-name">
 
-            {post.author.name}
+            {authorName}
 
-            {post.author.role === "admin" && (
+            {authorRole === "admin" && (
               <span className="admin-badge">Admin 📢</span>
+            )}
+
+            {/* WAITING APPROVAL BADGE */}
+
+            {post.isApproved === false && (
+              <span className="pending-badge">
+                ⏳ Waiting for admin approval
+              </span>
+            )}
+
+            {/* EDITED BADGE */}
+
+            {post.isEdited && (
+              <span className="edited-badge">
+                ✏ Edited
+              </span>
             )}
 
           </span>
 
           <div className="fb-sub-meta">
-            {new Date(post.createdAt).toLocaleDateString()} • 
+            {new Date(post.updatedAt).toLocaleDateString()} •
             <i className="bi bi-globe-americas"></i>
           </div>
 
@@ -169,17 +299,138 @@ const PostCard = ({ post, actions, commentText, setCommentText }) => {
 
       {/* MEDIA */}
 
-      {post.media?.url && (
+      {(post.media?.url || post.mediaFiles?.length > 0) && (
+
         <div className="fb-media-container">
 
-          {post.media.resource_type === "image" ? (
-            <img src={post.media.url} alt="post" />
+          {post.mediaFiles?.length > 0 ? (
+
+            <div className="media-slider">
+
+              {post.mediaFiles.map((file, index) => (
+
+                file.resource_type === "image" ? (
+
+                  <img
+                    key={index}
+                    src={file.url}
+                    alt="post"
+                    className="feed-image"
+                    onClick={() => {
+                      setCurrentIndex(index);   // 🔥 ADD THIS
+                      setShowImageModal(true);
+                      setZoom(1);
+                      setPosition({ x: 0, y: 0 });
+                    }}
+                  />
+
+                ) : (
+
+                  <video key={index} src={file.url} controls />
+
+                )
+
+              ))}
+
+            </div>
+
           ) : (
-            <video src={post.media.url} controls />
+
+            post.media?.resource_type === "image" ? (
+              <img
+                src={post.media.url}
+                className="feed-image"
+                onClick={() => {
+                  setCurrentIndex(0);
+                  setShowImageModal(true);
+                  setZoom(1);
+                  setPosition({ x: 0, y: 0 });
+                }}
+              />
+            ) : (
+              <video src={post.media.url} controls />
+            )
+
           )}
 
         </div>
+
       )}
+
+      {/* IMAGE MODAL */}
+
+      {showImageModal &&
+        createPortal(
+          <div
+            className="image-modal-overlay"
+            onClick={() => {
+              setShowImageModal(false);
+              setZoom(1);
+              setPosition({ x: 0, y: 0 });
+            }}
+          >
+
+            <img
+              src={
+                post.mediaFiles?.length > 0
+                  ? post.mediaFiles[currentIndex]?.url || post.mediaFiles[0]?.url
+                  : post.media?.url || ""
+              }
+              alt="full"
+              className="image-modal-content"
+              style={{
+                transform: `scale(${zoom}) translate(${position.x}px, ${position.y}px)`
+              }}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              onClick={(e) => e.stopPropagation()}
+              onWheel={(e) => {
+                e.preventDefault();
+                const delta = -e.deltaY * 0.001;
+                setZoom(prev => Math.min(Math.max(prev + delta, 1), 2));
+              }}
+            />
+
+            {post.mediaFiles?.length > 1 && (
+              <>
+                <button
+                  className="nav-btn left"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentIndex(prev =>
+                      prev === 0 ? post.mediaFiles.length - 1 : prev - 1
+                    );
+                  }}
+                >
+                  ◀
+                </button>
+
+                <button
+                  className="nav-btn right"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentIndex(prev =>
+                      prev === post.mediaFiles.length - 1 ? 0 : prev + 1
+                    );
+                  }}
+                >
+                  ▶
+                </button>
+              </>
+            )}
+
+            <button
+              className="image-close-btn"
+              onClick={() => setShowImageModal(false)}
+            >
+              ✕
+            </button>
+
+          </div>,
+          document.body   // 🔥 THIS FIXES EVERYTHING
+        )}
 
       {/* STATS */}
 
@@ -207,16 +458,14 @@ const PostCard = ({ post, actions, commentText, setCommentText }) => {
 
         <button
           onClick={() => actions.like(post._id)}
-          className={`fb-action-btn ${
-            post.likes?.length > 0 ? "active" : ""
-          }`}
+          className={`fb-action-btn ${post.likes?.length > 0 ? "active" : ""
+            }`}
         >
           <i
-            className={`bi ${
-              post.likes?.length > 0
-                ? "bi-hand-thumbs-up-fill"
-                : "bi-hand-thumbs-up"
-            }`}
+            className={`bi ${post.likes?.length > 0
+              ? "bi-hand-thumbs-up-fill"
+              : "bi-hand-thumbs-up"
+              }`}
           ></i>
           Like
         </button>
@@ -248,7 +497,15 @@ const PostCard = ({ post, actions, commentText, setCommentText }) => {
           <div className="fb-comment-input-row">
 
             <div className="fb-avatar-sm">
-              {post.author.name.charAt(0)}
+              {post.author?.profilePic ? (
+                <img
+                  src={post.author.profilePic}
+                  alt="profile"
+                  className="feed-avatar-img"
+                />
+              ) : (
+                authorName.charAt(0)
+              )}
             </div>
 
             <div className="fb-input-pill">
@@ -262,9 +519,15 @@ const PostCard = ({ post, actions, commentText, setCommentText }) => {
                     [post._id]: e.target.value,
                   })
                 }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleCommentSubmit();
+                  }
+                }}
               />
 
-              <button onClick={() => actions.comment(post._id)}>
+              <button onClick={handleCommentSubmit}>
                 <i className="bi bi-send-fill"></i>
               </button>
 
@@ -279,13 +542,21 @@ const PostCard = ({ post, actions, commentText, setCommentText }) => {
               <div key={i} className="fb-comment-item">
 
                 <div className="fb-avatar-sm">
-                  {c.userName?.charAt(0)}
+                  {c.user?.profilePic ? (
+                    <img
+                      src={c.user.profilePic}
+                      alt="profile"
+                      className="feed-avatar-img"
+                    />
+                  ) : (
+                    c.user?.name?.charAt(0) || "U"
+                  )}
                 </div>
 
                 <div className="fb-comment-bubble">
 
                   <span className="fb-comment-user">
-                    {c.userName}
+                    {c.user?.name || "Deleted User"}
                   </span>
 
                   <p>{c.text}</p>

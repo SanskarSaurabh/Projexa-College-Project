@@ -1,0 +1,16 @@
+.single-post-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa, #e4e7eb);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.single-post-container {
+  width: 100%;
+  max-width: 650px;
+}
+
+.single-post-container .fb-card {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}

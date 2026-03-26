@@ -10,16 +10,35 @@ const messageSchema = new mongoose.Schema(
 
   receiver: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
+    ref: "User"
+  },
+
+  /* GROUP SUPPORT */
+
+  groupId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Group"
   },
 
   text: {
-    type: String,
-    required: true,
+    type: String
   },
 
-  /* NEW FIELD FOR UNREAD SYSTEM */
+  /* FILE SUPPORT */
+
+  fileUrl: {
+    type: String
+  },
+
+  fileType: {
+    type: String
+  },
+
+  fileName: {
+    type: String
+  },
+
+  /* UNREAD SYSTEM */
 
   read: {
     type: Boolean,

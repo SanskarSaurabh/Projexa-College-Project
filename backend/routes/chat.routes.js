@@ -4,26 +4,41 @@ import {
   getChatHistory,
   getChatUsers,
   deleteChatHistory,
-  getUnreadCounts
+  getUnreadCounts,
+  createGroup,
+  addGroupMember,
+  removeGroupMember,
+  getGroups,
+  deleteGroup
 } from "../controller/ChatController.js";
 
 import protect from "../Middleware/AuthMiddleware.js";
 
 const router = express.Router();
 
-/* USERS LIST */
+/* USERS */
 
 router.get("/users", protect, getChatUsers);
 
-/* UNREAD COUNTS */
+/* GROUPS */
+
+router.get("/groups", protect, getGroups);
+
+router.post("/group/create", protect, createGroup);
+
+router.post("/group/add-member", protect, addGroupMember);
+
+router.post("/group/remove-member", protect, removeGroupMember);
+
+router.delete("/group/:groupId", protect, deleteGroup);
+
+/* UNREAD */
 
 router.get("/unread", protect, getUnreadCounts);
 
-/* CHAT HISTORY */
+/* CHAT */
 
 router.get("/:userId", protect, getChatHistory);
-
-/* DELETE CHAT */
 
 router.delete("/:userId", protect, deleteChatHistory);
 

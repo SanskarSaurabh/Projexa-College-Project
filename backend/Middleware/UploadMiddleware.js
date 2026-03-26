@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -14,16 +13,26 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: "campus_connect_posts",
-    resource_type: "auto", // ✅ This tells Cloudinary to decide if it's an image, video, or raw file
-    allowed_formats: ["jpg", "png", "jpeg", "gif", "mp4", "pdf", "docx", "txt","mov"],
+  params: async (req, file) => {
+    // Check if it's a PDF
+    const isPDF = file.mimetype === "application/pdf";
+    
+    return {
+      folder: "campus_connect_profile_docs",
+      // IMPORTANT: PDF ke liye 'image' resource_type use karein 
+      // taaki Cloudinary use previewable PDF ki tarah treat kare
+      resource_type: isPDF ? "image" : "auto", 
+      format: isPDF ? "pdf" : undefined, 
+      public_id: `file_${Date.now()}`,
+      // Access control (Optional but safe)
+      access_mode: 'public'
+    };
   },
 });
 
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 50 * 1024 * 1024 } // ✅ Fixed syntax: moved into 'limits'
+  limits: { fileSize: 10 * 1024 * 1024 } 
 });
 
 export default upload;
