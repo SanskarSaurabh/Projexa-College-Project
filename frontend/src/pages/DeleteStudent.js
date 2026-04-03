@@ -9,6 +9,7 @@ const DeleteStudent = () => {
   const [name, setName] = useState("");
   const [students, setStudents] = useState([]);
 
+  // ================= SEARCH =================
   const handleSearch = async () => {
 
     if (!name) {
@@ -20,20 +21,23 @@ const DeleteStudent = () => {
 
       const res = await searchStudents(name);
 
-      setStudents(res.data);
+      console.log("API Response:", res.data); // 🔍 debug
 
-      if (res.data.length === 0) {
+      // ✅ FIXED: correct data extraction
+      setStudents(res.data.students);
+
+      if (res.data.students.length === 0) {
         toast("No student found");
       }
 
     } catch (error) {
-
+      console.log(error);
       toast.error("Search failed");
-
     }
 
   };
 
+  // ================= DELETE =================
   const handleDelete = async (id) => {
 
     const confirmDelete = window.confirm(
@@ -46,6 +50,7 @@ const DeleteStudent = () => {
 
       await deleteStudent(id);
 
+      // ✅ update UI after delete
       setStudents(prev =>
         prev.filter(student => student._id !== id)
       );
@@ -53,9 +58,8 @@ const DeleteStudent = () => {
       toast.success("Student deleted successfully");
 
     } catch (error) {
-
+      console.log(error);
       toast.error("Delete failed");
-
     }
 
   };
@@ -70,7 +74,7 @@ const DeleteStudent = () => {
         <h1>Remove Student</h1>
       </div>
 
-      {/* SEARCH FORM */}
+      {/* ================= SEARCH FORM ================= */}
 
       <form
         className="student-search-box"
@@ -93,7 +97,9 @@ const DeleteStudent = () => {
 
       </form>
 
-      {students.length > 0 && (
+      {/* ================= TABLE ================= */}
+
+      {students?.length > 0 && (
 
         <div className="delete-student-table-card">
 
@@ -114,18 +120,15 @@ const DeleteStudent = () => {
                 <tr key={student._id}>
 
                   <td>{student.name}</td>
-
                   <td>{student.email}</td>
 
                   <td>
-
                     <button
                       className="delete-btn"
                       onClick={() => handleDelete(student._id)}
                     >
                       ✕
                     </button>
-
                   </td>
 
                 </tr>
