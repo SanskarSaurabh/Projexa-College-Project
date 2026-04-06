@@ -390,3 +390,26 @@ export const deleteGroup = async (req, res) => {
     });
   }
 };
+
+export const getGroupMessages = async (req, res) => {
+  try {
+
+    const messages = await MessageModel.find({
+      groupId: req.params.groupId
+    })
+    .populate("sender", "name profilePic")
+    .sort({ createdAt: 1 });
+
+    res.json({
+      success: true,
+      messages
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching group messages"
+    });
+  }
+};

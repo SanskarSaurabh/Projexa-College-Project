@@ -9,7 +9,8 @@ import {
   addGroupMember,
   removeGroupMember,
   getGroups,
-  deleteGroup
+  deleteGroup,
+  getGroupMessages
 } from "../controller/ChatController.js";
 
 import protect from "../Middleware/AuthMiddleware.js";
@@ -23,6 +24,8 @@ router.get("/users", protect, getChatUsers);
 /* GROUPS */
 
 router.get("/groups", protect, getGroups);
+
+router.get("/group/messages/:groupId", protect, getGroupMessages);
 
 router.post("/group/create", protect, createGroup);
 

@@ -380,3 +380,37 @@ border:2px solid white;
   transform: scale(1.1);
   background: #20c55a;
 }
+
+
+.msg-bubble {
+  padding: 10px 12px;
+  border-radius: 12px;
+  max-width: 70%;
+  position: relative;
+}
+
+/* ✅ TIME FIX */
+.msg-meta {
+  font-size: 11px;
+  color: #555;              /* darker for visibility */
+  margin-top: 6px;
+  text-align: right;
+  opacity: 0.8;
+}
+
+/* ✅ MY MESSAGE (orange wala) */
+.msg-me .msg-meta {
+  color: #222;
+}
+
+/* ✅ OTHER USER */
+.msg-them .msg-meta {
+  color: #444;
+}
+
+.msg-sender {
+  font-size: 11px;
+  font-weight: 600;
+  color: #25d366;
+  margin-bottom: 3px;
+}
